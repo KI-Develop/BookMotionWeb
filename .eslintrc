@@ -1,0 +1,38 @@
+{
+    "env": {
+      "browser": true,
+      "es6": true
+    },
+    "extends": [
+      "@nuxtjs/eslint-config-typescript",
+      "eslint:recommended",
+      "plugin:vue/essential",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:prettier/recommended"
+    ],
+    "globals": {
+      "Atomics": "readonly",
+      "SharedArrayBuffer": "readonly"
+    },
+    "parser": "vue-eslint-parser",
+    "parserOptions": {
+      "ecmaVersion": 2018,
+      "parser": "@typescript-eslint/parser",
+      "sourceType": "module"
+    },
+    "plugins": ["vue", "@typescript-eslint"],
+    "rules": {
+      "prettier/prettier": [
+        "error", {
+          "singleQuote": true,
+          "semi": false
+        }
+      ],
+      "vue/html-self-closing": ["error", {
+        "html": {
+          "void": "always"
+         }
+      }]
+    }
+  }
+  
