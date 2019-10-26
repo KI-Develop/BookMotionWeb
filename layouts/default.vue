@@ -4,68 +4,174 @@
       <Sider
         ref="side1"
         v-model="isCollapsed"
-        breakpoint="md"
         hide-trigger
         collapsible
         :collapsed-width="78"
+        breakpoint="md"
       >
-        <Menu active-name="1-2" theme="dark" width="auto" :open-names="['1']">
-          <Submenu name="1">
-            <template slot="title">
-              <Icon type="ios-navigate" />
-              Item 1
-            </template>
-            <MenuItem name="1-1">
-              Option 1
-            </MenuItem>
-            <MenuItem name="1-2">
-              Option 2
-            </MenuItem>
-            <MenuItem name="1-3">
-              Option 3
-            </MenuItem>
-          </Submenu>
-          <Submenu name="2">
-            <template slot="title">
-              <Icon type="ios-keypad" />
-              Item 2
-            </template>
-            <MenuItem name="2-1">
-              Option 1
-            </MenuItem>
-            <MenuItem name="2-2">
-              Option 2
-            </MenuItem>
-          </Submenu>
-          <Submenu name="3">
-            <template slot="title">
-              <Icon type="ios-analytics" />
-              Item 3
-            </template>
-            <MenuItem name="3-1">
-              Option 1
-            </MenuItem>
-            <MenuItem name="3-2">
-              Option 2
-            </MenuItem>
-          </Submenu>
+        <Menu
+          active-name="1-2"
+          theme="dark"
+          width="auto"
+          :class="menuitemClasses"
+        >
+          <Menu
+            active-name="1-2"
+            theme="dark"
+            width="auto"
+            :open-names="['1']"
+            :class="menuitemClasses"
+          >
+            <Submenu name="1">
+              <template slot="title">
+                <Icon type="ios-navigate" />
+                <span>書籍一覧</span>
+              </template>
+              <MenuItem name="1-1" @click.native="pageLink('/')">
+                <span>積み本</span>
+              </MenuItem>
+              <MenuItem name="1-2">
+                <span>気になる本</span>
+              </MenuItem>
+            </Submenu>
+            <Submenu name="2">
+              <template slot="title">
+                <Icon type="ios-keypad" />
+                <span>書籍登録</span>
+              </template>
+              <MenuItem name="2-1">
+                <span>データベース検索</span>
+              </MenuItem>
+              <MenuItem name="2-2">
+                <span>論文検索</span>
+              </MenuItem>
+              <MenuItem name="2-3">
+                <span>手入力</span>
+              </MenuItem>
+            </Submenu>
+            <Submenu name="3">
+              <template slot="title">
+                <Icon type="ios-analytics" />
+                <span>アカウント</span>
+              </template>
+              <MenuItem name="3-1">
+                <span>基本設定</span>
+              </MenuItem>
+              <MenuItem name="3-2">
+                <span>木の成長</span>
+              </MenuItem>
+              <MenuItem name="3-3">
+                <span>ログアウト</span>
+              </MenuItem>
+            </Submenu>
+            <Submenu name="4">
+              <template slot="title">
+                <Icon type="ios-navigate" />
+                その他
+              </template>
+              <MenuItem name="4-1">
+                お知らせ
+              </MenuItem>
+              <MenuItem name="4-2">
+                利用規約
+              </MenuItem>
+            </Submenu>
+          </Menu>
         </Menu>
       </Sider>
       <Layout>
-        <nuxt />
+        <Header :style="{ padding: 0 }" class="layout-header-bar">
+          <Icon
+            :class="rotateIcon"
+            :style="{ margin: '0 20px' }"
+            type="md-menu"
+            size="24"
+            @click.native="collapsedSider"
+          />
+          <span style="font-size:20px">{{ title }}</span>
+        </Header>
+        <Content :style="{ padding: '0 16px 16px' }">
+          <Breadcrumb :style="{ margin: '16px 0' }">
+            <BreadcrumbItem
+              v-for="breadCrumbItem in breadCrumbItems"
+              :key="breadCrumbItem.id"
+            >
+              {{ breadCrumbItem }}
+            </BreadcrumbItem>
+          </Breadcrumb>
+          <nuxt />
+        </Content>
       </Layout>
     </Layout>
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      isCollapsed: false
-    }
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+
+@Component
+export default class Default extends Vue {
+  isCollapsed: boolean = false
+  title: string = ''
+  breadCrumbItems: Array<string> = []
+
+  get rotateIcon(): Array<string> {
+    return ['menu-icon', this.isCollapsed ? 'rotate-icon' : '']
+  }
+  get menuitemClasses(): Array<string> {
+    return ['menu-item', this.isCollapsed ? 'collapsed-menu' : '']
+  }
+
+  created() {
+    this.$nuxt.$on('updatePageName', this.setPageName)
+  }
+
+  collapsedSider() {
+    this.$refs.side1.toggleCollapse()
+  }
+
+  setPageName(pageName: Array<string>): void {
+    this.title = pageName[1] || ''
+    this.breadCrumbItems = pageName
+  }
+
+  pageLink(path: string): void {
+    this.$router.push(path)
   }
 }
+
+// export default {
+//   data() {
+//     return {
+//       isCollapsed: false,
+//       title: '',
+//       breadCrumbItems: []
+//     }
+//   },
+//   computed: {
+//     rotateIcon() {
+//       return ['menu-icon', this.isCollapsed ? 'rotate-icon' : '']
+//     },
+//     menuitemClasses() {
+//       return ['menu-item', this.isCollapsed ? 'collapsed-menu' : '']
+//     }
+//   },
+//   created() {
+//     this.$nuxt.$on('updatePageName', this.setPageName)
+//   },
+//   methods: {
+//     collapsedSider() {
+//       this.$refs.side1.toggleCollapse()
+//     },
+//     setPageName(title) {
+//       this.title = title[1] || ''
+//       this.breadCrumbItems = title
+//     },
+//     pageLink(path) {
+//       this.$router.push(path)
+//     }
+//   }
+// }
 </script>
 
 <style>
@@ -115,5 +221,36 @@ html {
 .button--grey:hover {
   color: #fff;
   background-color: #35495e;
+}
+
+.layout-header-bar {
+  background: #fff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.layout-con {
+  height: 100%;
+  width: 100%;
+}
+
+.rotate-icon {
+  transform: rotate(-90deg);
+}
+
+.collapsed-menu span {
+  width: 0px;
+  transition: width 0.2s ease;
+}
+.collapsed-menu i {
+  transform: translateX(5px);
+  transition: font-size 0.2s ease 0.2s, transform 0.2s ease 0.2s;
+  vertical-align: middle;
+  font-size: 2;
+}
+.menu-item i {
+  transform: translateX(0px);
+  transition: font-size 0.2s ease, transform 0.2s ease;
+  vertical-align: middle;
+  font-size: 16px;
 }
 </style>
