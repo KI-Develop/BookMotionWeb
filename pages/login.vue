@@ -22,7 +22,7 @@ export default {
             authProviders.Facebook,
             authProviders.Twitter
           ],
-          signInSuccessUrl: '/home'
+          signInSuccessUrl: '/list/tsundoku'
         }
 
         ui.start('#firebaseui-auth-container', config)

@@ -24,19 +24,19 @@
           >
             <Submenu name="1">
               <template slot="title">
-                <Icon type="ios-navigate" />
+                <Icon type="ios-list" />
                 <span>書籍一覧</span>
               </template>
-              <MenuItem name="1-1" @click.native="pageLink('/')">
+              <MenuItem name="1-1" @click.native="pageLink('/list/tsundoku')">
                 <span>積み本</span>
               </MenuItem>
-              <MenuItem name="1-2">
+              <MenuItem name="1-2" @click.native="pageLink('/list/wishlist')">
                 <span>気になる本</span>
               </MenuItem>
             </Submenu>
             <Submenu name="2">
               <template slot="title">
-                <Icon type="ios-keypad" />
+                <Icon type="ios-add-circle" />
                 <span>書籍登録</span>
               </template>
               <MenuItem name="2-1">
@@ -51,7 +51,7 @@
             </Submenu>
             <Submenu name="3">
               <template slot="title">
-                <Icon type="ios-analytics" />
+                <Icon type="ios-contact" />
                 <span>アカウント</span>
               </template>
               <MenuItem name="3-1">
@@ -66,7 +66,7 @@
             </Submenu>
             <Submenu name="4">
               <template slot="title">
-                <Icon type="ios-navigate" />
+                <Icon type="ios-more" />
                 その他
               </template>
               <MenuItem name="4-1">
@@ -88,6 +88,7 @@
             size="24"
             @click.native="collapsedSider"
           />
+          <!-- TODO: title padding  -->
           <span style="font-size:20px">{{ title }}</span>
         </Header>
         <Content :style="{ padding: '0 16px 16px' }">
@@ -96,7 +97,9 @@
               v-for="breadCrumbItem in breadCrumbItems"
               :key="breadCrumbItem.id"
             >
-              {{ breadCrumbItem }}
+              <nuxt-link :to="breadCrumbItem.path">
+                {{ breadCrumbItem.name }}
+              </nuxt-link>
             </BreadcrumbItem>
           </Breadcrumb>
           <nuxt />
@@ -113,7 +116,7 @@ import { Component, Vue } from 'vue-property-decorator'
 export default class Default extends Vue {
   isCollapsed: boolean = false
   title: string = ''
-  breadCrumbItems: Array<string> = []
+  breadCrumbItems: any = {}
 
   get rotateIcon(): Array<string> {
     return ['menu-icon', this.isCollapsed ? 'rotate-icon' : '']
@@ -130,8 +133,8 @@ export default class Default extends Vue {
     this.$refs.side1.toggleCollapse()
   }
 
-  setPageName(pageName: Array<string>): void {
-    this.title = pageName[1] || ''
+  setPageName(pageName: any): void {
+    this.title = pageName[1].name || ''
     this.breadCrumbItems = pageName
   }
 
@@ -139,39 +142,6 @@ export default class Default extends Vue {
     this.$router.push(path)
   }
 }
-
-// export default {
-//   data() {
-//     return {
-//       isCollapsed: false,
-//       title: '',
-//       breadCrumbItems: []
-//     }
-//   },
-//   computed: {
-//     rotateIcon() {
-//       return ['menu-icon', this.isCollapsed ? 'rotate-icon' : '']
-//     },
-//     menuitemClasses() {
-//       return ['menu-item', this.isCollapsed ? 'collapsed-menu' : '']
-//     }
-//   },
-//   created() {
-//     this.$nuxt.$on('updatePageName', this.setPageName)
-//   },
-//   methods: {
-//     collapsedSider() {
-//       this.$refs.side1.toggleCollapse()
-//     },
-//     setPageName(title) {
-//       this.title = title[1] || ''
-//       this.breadCrumbItems = title
-//     },
-//     pageLink(path) {
-//       this.$router.push(path)
-//     }
-//   }
-// }
 </script>
 
 <style>
