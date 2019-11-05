@@ -39,7 +39,10 @@
                 <Icon type="ios-add-circle" />
                 <span>書籍登録</span>
               </template>
-              <MenuItem name="2-1">
+              <MenuItem
+                name="2-1"
+                @click.native="pageLink('/register/database')"
+              >
                 <span>データベース検索</span>
               </MenuItem>
               <MenuItem name="2-2">
