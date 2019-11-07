@@ -17,7 +17,7 @@
     </Row>
     <p>{{ message }}</p>
     <ul>
-      <li v-for="item in items" :key="item.id">
+      <!-- <li v-for="item in items" :key="item.id">
         <p>{{ item.volumeInfo.title }}</p>
         <br />
         <p>{{ item.volumeInfo.description }}</p>
@@ -32,69 +32,73 @@
             <img :src="item.volumeInfo.imageLinks.thumbnail" />
           </template>
         </template>
-      </li>
+      </li> -->
     </ul>
   </div>
 </template>
-<script>
+<script lang="ts">
+import { Component, Watch, Vue } from 'vue-property-decorator'
 import axios from 'axios'
 import _ from 'lodash'
-export default {
-  data() {
-    return {
-      keyword: '',
-      message: '',
-      select: 'book',
-      items: null
-    }
-  },
-  computed: {
-    pHolder() {
-      return this.select === 'book' ? 'タイトルや著者から検索する' : '論文だお'
-    }
-  },
-  watch: {
-    keyword() {
-      this.message = 'waiting for you stop typing...'
-      this.debouncedGetAnswer()
-    }
-  },
+import { SearchData } from '~/types/book'
+
+@Component
+export default class database extends Vue {
+  keyword: string = ''
+  message: string = ''
+  select: string = 'book'
+  items: SearchData[] = []
+
+  get pHolder() {
+    return this.select === 'book' ? 'タイトルや著者から検索する' : '論文だお'
+  }
+
+  @Watch('keyword')
+  onKeywordChanged() {
+    this.message = 'waiting for you stop typing...'
+    this.debouncedGetAnswer()
+  }
+
   created() {
     this.debouncedGetAnswer = _.debounce(this.getAnswer, 1000)
-  },
+  }
+
   mounted() {
     this.$nuxt.$emit('updatePageName', [
       { name: '書籍登録', path: '' },
       { name: 'データベース検索', path: '/register/database' }
     ])
-  },
-  methods: {
-    getAnswer() {
-      if (this.keyword === '') {
-        this.items = null
-        this.message = ''
-        return
-      }
+  }
 
-      this.message = 'Loadng...'
-      const vm = this
-      // const params = { q: this.keyword }
-      axios
-        .get(
-          'https://www.googleapis.com/books/v1/volumes?q=' +
-            this.keyword +
-            '&maxResults=40'
-        )
-        .then(function(response) {
-          console.log(response.data.items)
-          vm.items = response.data.items
+  debouncedGetAnswer() {}
+
+  async getAnswer() {
+    if (this.keyword === '') {
+      this.items = []
+      this.message = ''
+      return
+    }
+
+    this.message = 'Loadng...'
+
+    const res = await axios.get(
+      'https://www.googleapis.com/books/v1/volumes?q=' +
+        this.keyword +
+        '&maxResults=40'
+    )
+    // TODO: error handling
+
+    for (const [index, item] of res.data.items.entries()) {
+      if (item.volumeInfo) {
+        this.items.push({
+          title: item.volumeInfo.title,
+          authors: item.volumeInfo.authors,
+          description: item.volumeInfo.description
         })
-        .catch(function(error) {
-          vm.messae = 'Error!' + error
-        })
-        .finally(function() {
-          vm.message = ''
-        })
+        if (item.volumeInfo.imageLinks) {
+          this.items[index].bookImage = item.volumeInfo.imageLinks.thumbnail
+        }
+      }
     }
   }
 }
