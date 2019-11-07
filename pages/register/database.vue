@@ -16,24 +16,7 @@
       </i-col>
     </Row>
     <p>{{ message }}</p>
-    <ul>
-      <!-- <li v-for="item in items" :key="item.id">
-        <p>{{ item.volumeInfo.title }}</p>
-        <br />
-        <p>{{ item.volumeInfo.description }}</p>
-        <br />
-        <template v-for="author in item.volumeInfo.authors">
-          <p :key="author.id">
-            {{ author }}
-          </p>
-        </template>
-        <template v-if="item.volumeInfo.imageLinks">
-          <template v-if="item.volumeInfo.imageLinks.thumbnail">
-            <img :src="item.volumeInfo.imageLinks.thumbnail" />
-          </template>
-        </template>
-      </li> -->
-    </ul>
+    <BookList :items="items" />
   </div>
 </template>
 <script lang="ts">
@@ -41,8 +24,13 @@ import { Component, Watch, Vue } from 'vue-property-decorator'
 import axios from 'axios'
 import _ from 'lodash'
 import { SearchData } from '~/types/book'
+import BookList from '~/components/molecules/BookList.vue'
 
-@Component
+@Component({
+  components: {
+    BookList
+  }
+})
 export default class database extends Vue {
   keyword: string = ''
   message: string = ''
