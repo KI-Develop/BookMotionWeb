@@ -20,4 +20,6 @@ export interface WishlistData extends BookData {
   createdAt?: string
 }
 
-export interface SearchData extends BookData {}
+export interface SearchData extends BookData {
+  publishedDate?: string
+}

@@ -1,18 +1,18 @@
 <template>
+  <!-- TODO: 中央寄せ or 二列にする -->
   <Card>
     <List item-layout="vertical">
-      <ListItem v-for="item in items" :key="item.title">
+      <ListItem v-for="(item, index) in items" :key="index">
         <ListItemMeta :title="item.title" :description="item.description" />
-        <template>
-          著者名:
+        <template v-if="item.authors">
           <span
             v-for="author in item.authors"
             :key="author.id"
-            style="opacity:0.7"
           >
             {{ author }}
           </span>
         </template>
+        <p>{{ item.publishedDate }}</p>
         <template v-if="flag === 'tsundoku'">
           <template slot="action">
             <Progress
@@ -57,12 +57,19 @@
             <li><Icon type="ios-remove-circle-outline" /> 削除</li>
           </template>
         </template>
+        <template v-if="flag === 'search'">
+          <template slot="action">
+            <li><Icon type="md-add" /> 積み本に追加</li>
+            <li><Icon type="md-add" /> 気になる本に追加</li>
+          </template>
+        </template>
         <template slot="extra">
           <img :src="item.bookImage" style="width: 180px" />
         </template>
       </ListItem>
     </List>
   </Card>
+  </i-col>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'

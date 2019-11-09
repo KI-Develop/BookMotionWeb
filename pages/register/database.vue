@@ -16,7 +16,10 @@
       </i-col>
     </Row>
     <p>{{ message }}</p>
-    <BookList :items="items" />
+    <br />
+    <template v-if="items.length">
+      <BookList :items="items" flag="search" />
+    </template>
   </div>
 </template>
 <script lang="ts">
@@ -48,7 +51,7 @@ export default class database extends Vue {
   }
 
   created() {
-    this.debouncedGetAnswer = _.debounce(this.getAnswer, 1000)
+    this.debouncedGetAnswer = _.debounce(this.getAnswer, 1500)
   }
 
   mounted() {
@@ -67,21 +70,25 @@ export default class database extends Vue {
       return
     }
 
-    this.message = 'Loadng...'
+    this.message = 'Loading...'
 
     const res = await axios.get(
       'https://www.googleapis.com/books/v1/volumes?q=' +
         this.keyword +
         '&maxResults=40'
     )
+
+    this.message = ''
     // TODO: error handling
 
     for (const [index, item] of res.data.items.entries()) {
+      console.log(item.volumeInfo)
       if (item.volumeInfo) {
         this.items.push({
           title: item.volumeInfo.title,
           authors: item.volumeInfo.authors,
-          description: item.volumeInfo.description
+          description: item.volumeInfo.description,
+          publishedDate: item.volumeInfo.publishedDate
         })
         if (item.volumeInfo.imageLinks) {
           this.items[index].bookImage = item.volumeInfo.imageLinks.thumbnail
