@@ -45,10 +45,10 @@
               >
                 <span>データベース検索</span>
               </MenuItem>
-              <MenuItem name="2-2">
+              <!-- <MenuItem name="2-2">
                 <span>論文検索</span>
-              </MenuItem>
-              <MenuItem name="2-3">
+              </MenuItem> -->
+              <MenuItem name="2-2">
                 <span>手入力</span>
               </MenuItem>
             </Submenu>

@@ -22,4 +22,5 @@ export interface WishlistData extends BookData {
 
 export interface SearchData extends BookData {
   publishedDate?: string
+  selfLink?: string
 }

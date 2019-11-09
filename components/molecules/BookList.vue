@@ -3,12 +3,12 @@
   <Card>
     <List item-layout="vertical">
       <ListItem v-for="(item, index) in items" :key="index">
-        <ListItemMeta :title="item.title" :description="item.description" />
+        <ListItemMeta
+          :title="item.title"
+          :description="descriptionLength(item.description)"
+        />
         <template v-if="item.authors">
-          <span
-            v-for="author in item.authors"
-            :key="author.id"
-          >
+          <span v-for="author in item.authors" :key="author.id">
             {{ author }}
           </span>
         </template>
@@ -59,21 +59,25 @@
         </template>
         <template v-if="flag === 'search'">
           <template slot="action">
-            <li><Icon type="md-add" /> 積み本に追加</li>
-            <li><Icon type="md-add" /> 気になる本に追加</li>
+            <li @click="addTsundoku(item)">
+              <Icon type="md-add" /> 積み本に追加
+            </li>
+            <li @click="addTsundoku(item)">
+              <Icon type="md-add" /> 気になる本に追加
+            </li>
           </template>
         </template>
         <template slot="extra">
-          <img :src="item.bookImage" style="width: 180px" />
+          <img :src="item.bookImage" style="width: 170px" />
         </template>
       </ListItem>
     </List>
   </Card>
-  </i-col>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { BookData } from '@/types/book'
+
 @Component
 export default class BookList extends Vue {
   @Prop({ default: {} })
@@ -82,5 +86,24 @@ export default class BookList extends Vue {
   flag!: string
 
   value8: number = 300
+
+  descriptionLength(description: string): string {
+    if (description) {
+      return description.length >= 200
+        ? description.slice(0, 150) + '...'
+        : description
+    }
+    return description
+  }
+
+  addWishlist(item: any): void {
+    // TODO: dbに追加
+    alert(item.selfLink)
+  }
+
+  addTsundoku(item: any): void {
+    // TODO: dbに追加
+    alert(item.selfLink)
+  }
 }
 </script>

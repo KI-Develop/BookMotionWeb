@@ -6,9 +6,9 @@
     />
     <br />
     <br />
-    <Scroll :on-reach-bottom="handleReachBottom" :height="height - 180">
-      <BookList :items="tsundokuData" :flag="flag" />
-    </Scroll>
+    <!-- <Scroll :on-reach-bottom="handleReachBottom" :height="height - 180"> -->
+    <BookList :items="tsundokuData" :flag="flag" />
+    <!-- </Scroll> -->
   </div>
 </template>
 
@@ -29,7 +29,7 @@ export default class Index extends Vue {
   tsundokuData!: TsundokuData
 
   flag: string = 'tsundoku'
-  height: number = window.innerHeight
+  // height: number = window.innerHeight
   bookCriteria: Array<string> = [
     'すべて表示',
     '論文',
@@ -46,19 +46,19 @@ export default class Index extends Vue {
       { name: '書籍一覧', path: '' },
       { name: '積み本', path: '/list/tsundoku' }
     ])
-    window.addEventListener('resize', this.handleResize)
+    // window.addEventListener('resize', this.handleResize)
   }
 
-  handleResize() {
-    this.height = window.innerHeight
-  }
+  // handleResize() {
+  //   this.height = window.innerHeight
+  // }
 
-  handleReachBottom() {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve()
-      }, 2000)
-    })
-  }
+  // handleReachBottom() {
+  //   return new Promise(resolve => {
+  //     setTimeout(() => {
+  //       resolve()
+  //     }, 2000)
+  //   })
+  // }
 }
 </script>

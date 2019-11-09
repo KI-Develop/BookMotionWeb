@@ -6,9 +6,9 @@
     />
     <br />
     <br />
-    <Scroll :on-reach-bottom="handleReachBottom" :height="height - 180">
-      <BookList :items="tsundokuData" :flag="flag" />
-    </Scroll>
+    <!-- <Scroll :on-reach-bottom="handleReachBottom" :height="height - 180"> -->
+    <BookList :items="tsundokuData" :flag="flag" />
+    <!-- </Scroll> -->
   </div>
 </template>
 <script lang="ts">
@@ -25,7 +25,7 @@ export default class WishList extends Vue {
   tsundokuData!: WishlistData
 
   flag: string = 'wishlist'
-  height: number = window.innerHeight
+  // height: number = window.innerHeight
 
   bookCriteria: Array<string> = [
     'すべて表示',
@@ -35,9 +35,9 @@ export default class WishList extends Vue {
   ]
   defaultBookCriteria: string = 'すべて表示'
 
-  handleResize() {
-    this.height = window.innerHeight
-  }
+  // handleResize() {
+  //   this.height = window.innerHeight
+  // }
 
   handleReachBottom() {
     return new Promise(resolve => {
@@ -52,7 +52,7 @@ export default class WishList extends Vue {
       { name: '書籍一覧', path: '' },
       { name: '気になる本', path: '/list/wishlist' }
     ])
-    window.addEventListener('resize', this.handleResize)
+    // window.addEventListener('resize', this.handleResize)
   }
 }
 </script>
