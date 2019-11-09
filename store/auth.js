@@ -2,7 +2,8 @@ import { auth } from '~/plugins/firebase'
 
 export const state = () => ({
   status: '',
-  username: ''
+  username: '',
+  uid: ''
 })
 
 export const getters = {
@@ -13,6 +14,7 @@ export const mutations = {
   setUser(state, user) {
     state.status = 'loggedIn'
     state.username = user.displayName
+    state.uid = user.uid
   },
   logout(state) {
     state.status = 'loggedOut'

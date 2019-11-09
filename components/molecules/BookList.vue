@@ -8,11 +8,13 @@
           :description="descriptionLength(item.description)"
         />
         <template v-if="item.authors">
+          著者:
           <span v-for="author in item.authors" :key="author.id">
             {{ author }}
           </span>
         </template>
-        <p>{{ item.publishedDate }}</p>
+        <p>出版社: {{ item.publisher }}</p>
+        <p>出版日: {{ item.publishedDate }}</p>
         <template v-if="flag === 'tsundoku'">
           <template slot="action">
             <Progress
@@ -46,8 +48,6 @@
           <p>読書終了予定日: {{ item.readingEndExpectedDate }}</p>
         </template>
         <template v-if="flag === 'wishlist'">
-          <br /><br />
-          <p>メモ: {{ item.memo }}</p>
           <br />
           <p>追加日: {{ item.createdAt }}</p>
           <template slot="action">
@@ -62,7 +62,7 @@
             <li @click="addTsundoku(item)">
               <Icon type="md-add" /> 積み本に追加
             </li>
-            <li @click="addTsundoku(item)">
+            <li @click="addWishlist(item)">
               <Icon type="md-add" /> 気になる本に追加
             </li>
           </template>
@@ -76,7 +76,9 @@
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { BookData } from '@/types/book'
+import * as firebase from 'firebase/app'
+import { BookData, AddWishlistData } from '@/types/book'
+import { db } from '~/plugins/firebase'
 
 @Component
 export default class BookList extends Vue {
@@ -96,14 +98,35 @@ export default class BookList extends Vue {
     return description
   }
 
+  // TODO: 変数リファクタリング
+  success(bookType: string): void {
+    this.$Notice.success({
+      title:
+        bookType === 'tsundoku'
+          ? '本を積みました。'
+          : '気になる本に追加しました。'
+    })
+  }
+
   addWishlist(item: any): void {
-    // TODO: dbに追加
-    alert(item.selfLink)
+    const wishlistData: AddWishlistData = {
+      userId: this.$store.state.auth.uid,
+      bookStatus: 'wishlist',
+      bookType: 'book',
+      items: item,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }
+    db.collection('books')
+      .add(wishlistData)
+      .then(res => {
+        this.success('wishlist')
+      })
+      .catch(err => console.log(err))
   }
 
   addTsundoku(item: any): void {
     // TODO: dbに追加
-    alert(item.selfLink)
+    console.log(item)
   }
 }
 </script>

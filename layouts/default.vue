@@ -13,73 +13,63 @@
           active-name="1-2"
           theme="dark"
           width="auto"
+          :open-names="['1']"
           :class="menuitemClasses"
         >
-          <Menu
-            active-name="1-2"
-            theme="dark"
-            width="auto"
-            :open-names="['1']"
-            :class="menuitemClasses"
-          >
-            <Submenu name="1">
-              <template slot="title">
-                <Icon type="ios-list" />
-                <span>書籍一覧</span>
-              </template>
-              <MenuItem name="1-1" @click.native="pageLink('/list/tsundoku')">
-                <span>積み本</span>
-              </MenuItem>
-              <MenuItem name="1-2" @click.native="pageLink('/list/wishlist')">
-                <span>気になる本</span>
-              </MenuItem>
-            </Submenu>
-            <Submenu name="2">
-              <template slot="title">
-                <Icon type="ios-add-circle" />
-                <span>書籍登録</span>
-              </template>
-              <MenuItem
-                name="2-1"
-                @click.native="pageLink('/register/database')"
-              >
-                <span>データベース検索</span>
-              </MenuItem>
-              <!-- <MenuItem name="2-2">
+          <Submenu name="1">
+            <template slot="title">
+              <Icon type="ios-list" />
+              <span>書籍一覧</span>
+            </template>
+            <MenuItem name="1-1" @click.native="pageLink('/list/tsundoku')">
+              <span>積み本</span>
+            </MenuItem>
+            <MenuItem name="1-2" @click.native="pageLink('/list/wishlist')">
+              <span>気になる本</span>
+            </MenuItem>
+          </Submenu>
+          <Submenu name="2">
+            <template slot="title">
+              <Icon type="ios-add-circle" />
+              <span>書籍登録</span>
+            </template>
+            <MenuItem name="2-1" @click.native="pageLink('/register/database')">
+              <span>データベース検索</span>
+            </MenuItem>
+            <!-- <MenuItem name="2-2">
                 <span>論文検索</span>
               </MenuItem> -->
-              <MenuItem name="2-2">
-                <span>手入力</span>
-              </MenuItem>
-            </Submenu>
-            <Submenu name="3">
-              <template slot="title">
-                <Icon type="ios-contact" />
-                <span>アカウント</span>
-              </template>
-              <MenuItem name="3-1">
-                <span>基本設定</span>
-              </MenuItem>
-              <MenuItem name="3-2">
-                <span>木の成長</span>
-              </MenuItem>
-              <MenuItem name="3-3">
-                <span>ログアウト</span>
-              </MenuItem>
-            </Submenu>
-            <Submenu name="4">
-              <template slot="title">
-                <Icon type="ios-more" />
-                その他
-              </template>
-              <MenuItem name="4-1">
-                お知らせ
-              </MenuItem>
-              <MenuItem name="4-2">
-                利用規約
-              </MenuItem>
-            </Submenu>
-          </Menu>
+            <MenuItem name="2-2">
+              <span>手入力</span>
+            </MenuItem>
+          </Submenu>
+          <Submenu name="3">
+            <template slot="title">
+              <Icon type="ios-contact" />
+              <span>アカウント</span>
+            </template>
+            <MenuItem name="3-1">
+              <span>基本設定</span>
+            </MenuItem>
+            <MenuItem name="3-2">
+              <span>木の成長</span>
+            </MenuItem>
+            <MenuItem name="3-3">
+              <span>ログアウト</span>
+            </MenuItem>
+          </Submenu>
+          <Submenu name="4">
+            <template slot="title">
+              <Icon type="ios-more" />
+              その他
+            </template>
+            <MenuItem name="4-1">
+              お知らせ
+            </MenuItem>
+            <MenuItem name="4-2">
+              利用規約
+            </MenuItem>
+          </Submenu>
         </Menu>
       </Sider>
       <Layout>

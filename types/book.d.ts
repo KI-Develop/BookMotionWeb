@@ -3,6 +3,15 @@ interface BookData {
   authors?: Array<string>
   description?: string
   bookImage?: string
+  publishedDate?: string
+  publisher?: string
+}
+
+interface AddBookData {
+  userId: string
+  bookStatus: string
+  bookType: string
+  createdAt: any
 }
 
 export interface TsundokuData extends BookData {
@@ -15,12 +24,11 @@ export interface TsundokuData extends BookData {
   totalPageCount?: number
 }
 export interface WishlistData extends BookData {
-  id?: number
-  memo?: string
-  createdAt?: string
+  createdAt?: Date
 }
 
-export interface SearchData extends BookData {
-  publishedDate?: string
-  selfLink?: string
+export interface SearchData extends BookData {}
+
+export interface AddWishlistData extends AddBookData {
+  items: WishlistData
 }

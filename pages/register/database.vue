@@ -81,14 +81,13 @@ export default class database extends Vue {
     this.message = ''
     // TODO: error handling
     for (const [index, item] of res.data.items.entries()) {
-      console.log(item)
       if (item.volumeInfo) {
         this.items.push({
           title: item.volumeInfo.title,
           authors: item.volumeInfo.authors,
           description: item.volumeInfo.description,
           publishedDate: item.volumeInfo.publishedDate,
-          selfLink: item.selfLink
+          publisher: item.volumeInfo.publisher
         })
         if (item.volumeInfo.imageLinks) {
           this.items[index].bookImage = item.volumeInfo.imageLinks.thumbnail
