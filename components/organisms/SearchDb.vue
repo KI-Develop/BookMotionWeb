@@ -2,17 +2,13 @@
   <div>
     <Row>
       <i-col :xs="{ span: 24 }" :lg="{ span: 12 }">
-        <i-input v-model="keyword" :placeholder="pHolder">
-          <Select slot="prepend" v-model="select" style="width: 80px">
-            <Option value="book">
-              書籍検索
-            </Option>
-            <Option value="paper">
-              論文検索
-            </Option>
-          </Select>
-          <Button slot="append" icon="ios-search" />
-        </i-input>
+        <Search
+          option="書籍検索"
+          select="タイトルや著者から検索する"
+          button-icon="ios-search"
+          emit-name="bookKeywordChanged"
+          @bookKeywordChanged="onKeywordChanged"
+        />
       </i-col>
     </Row>
     <p>{{ message }}</p>
@@ -23,29 +19,27 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Watch, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import axios from 'axios'
 import _ from 'lodash'
 import { SearchData } from '~/types/book'
 import BookList from '~/components/molecules/BookList.vue'
+import Search from '~/components/molecules/Search.vue'
 
 @Component({
   components: {
-    BookList
+    BookList,
+    Search
   }
 })
-export default class database extends Vue {
+export default class SearchDb extends Vue {
   keyword: string = ''
   message: string = ''
   select: string = 'book'
   items: SearchData[] = []
 
-  get pHolder() {
-    return this.select === 'book' ? 'タイトルや著者から検索する' : '論文だお'
-  }
-
-  @Watch('keyword')
-  onKeywordChanged() {
+  onKeywordChanged(keyword: string) {
+    this.keyword = keyword
     this.message = 'waiting for you stop typing...'
     this.debouncedGetAnswer()
   }
@@ -57,7 +51,7 @@ export default class database extends Vue {
   mounted() {
     this.$nuxt.$emit('updatePageName', [
       { name: '書籍登録', path: '' },
-      { name: 'データベース検索', path: '/register/database' }
+      { name: 'データベース検索', path: '/register/searchdb' }
     ])
   }
 

@@ -33,14 +33,14 @@
               <Icon type="ios-add-circle" />
               <span>書籍登録</span>
             </template>
-            <MenuItem name="2-1" @click.native="pageLink('/register/database')">
+            <MenuItem name="2-1" @click.native="pageLink('/register/searchdb')">
               <span>データベース検索</span>
             </MenuItem>
             <!-- <MenuItem name="2-2">
                 <span>論文検索</span>
               </MenuItem> -->
-            <MenuItem name="2-2">
-              <span>手入力</span>
+            <MenuItem name="2-2" @click.native="pageLink('/register/manual')">
+              <span>手動入力</span>
             </MenuItem>
           </Submenu>
           <Submenu name="3">
