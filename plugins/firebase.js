@@ -1,4 +1,5 @@
 import * as firebase from 'firebase/app'
+import 'firebase/firestore'
 import 'firebase/auth'
 import config from '~/firebase.config'
 
@@ -13,3 +14,5 @@ export const authProviders = {
 }
 
 export const auth = firebase.auth()
+
+export const db = firebase.firestore()

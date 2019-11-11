@@ -1,17 +1,23 @@
 <template>
+  <!-- TODO: 中央寄せ or 二列にする -->
   <Card>
     <List item-layout="vertical">
-      <ListItem v-for="item in items" :key="item.title">
-        <ListItemMeta :title="item.title" :description="item.description" />
-        <template>
-          著者名:
-          <span
-            v-for="author in item.authors"
-            :key="author.id"
-            style="opacity:0.7"
-          >
+      <ListItem v-for="(item, index) in items" :key="index">
+        <ListItemMeta
+          :title="item.title"
+          :description="descriptionLength(item.description)"
+        />
+        <template v-if="item.authors">
+          著者:
+          <span v-for="author in item.authors" :key="author.id">
             {{ author }}
           </span>
+        </template>
+        <template v-if="item.publisher">
+          <p>出版社: {{ item.publisher }}</p>
+        </template>
+        <template v-if="item.publishedDate">
+          <p>出版日: {{ item.publishedDate }}</p>
         </template>
         <template v-if="flag === 'tsundoku'">
           <template slot="action">
@@ -46,8 +52,6 @@
           <p>読書終了予定日: {{ item.readingEndExpectedDate }}</p>
         </template>
         <template v-if="flag === 'wishlist'">
-          <br /><br />
-          <p>メモ: {{ item.memo }}</p>
           <br />
           <p>追加日: {{ item.createdAt }}</p>
           <template slot="action">
@@ -57,8 +61,18 @@
             <li><Icon type="ios-remove-circle-outline" /> 削除</li>
           </template>
         </template>
+        <template v-if="flag === 'search'">
+          <template slot="action">
+            <li @click="addTsundoku(item)">
+              <Icon type="md-add" /> 積み本に追加
+            </li>
+            <li @click="addWishlist(item)">
+              <Icon type="md-add" /> 気になる本に追加
+            </li>
+          </template>
+        </template>
         <template slot="extra">
-          <img :src="item.bookImage" style="width: 180px" />
+          <img :src="item.bookImage" style="width: 170px" />
         </template>
       </ListItem>
     </List>
@@ -66,7 +80,10 @@
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { BookData } from '@/types/book'
+import * as firebase from 'firebase/app'
+import { BookData, AddWishlistData, SearchData } from '@/types/book'
+import { db } from '~/plugins/firebase'
+
 @Component
 export default class BookList extends Vue {
   @Prop({ default: {} })
@@ -75,5 +92,59 @@ export default class BookList extends Vue {
   flag!: string
 
   value8: number = 300
+
+  descriptionLength(description: string): string {
+    if (description) {
+      return description.length >= 200
+        ? description.slice(0, 150) + '...'
+        : description
+    }
+    return description
+  }
+
+  // TODO: 変数リファクタリング
+  success(bookType: string): void {
+    this.$Notice.success({
+      title:
+        bookType === 'tsundoku'
+          ? '積み本に追加しました。'
+          : '気になる本に追加しました。',
+      render: h => {
+        return h('span', [
+          h(
+            'a',
+            {
+              attrs: {
+                href: '/list/' + bookType
+              }
+            },
+            bookType === 'tsundoku' ? '積み本一覧' : '気になる本一覧'
+          ),
+          'を確認する。'
+        ])
+      }
+    })
+  }
+
+  addWishlist(item: SearchData): void {
+    const wishlistData: AddWishlistData = {
+      userId: this.$store.state.auth.uid,
+      bookStatus: 'wishlist',
+      bookType: 'book',
+      items: item,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }
+    db.collection('books')
+      .add(wishlistData)
+      .then(res => {
+        this.success('wishlist')
+      })
+      .catch(err => console.log(err))
+  }
+
+  addTsundoku(item: any): void {
+    // TODO: dbに追加
+    this.success('tsundoku')
+  }
 }
 </script>
