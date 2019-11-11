@@ -11,18 +11,23 @@
         />
       </i-col>
     </Row>
-    <p>{{ message }}</p>
     <br />
-    <template v-if="items.length">
-      <BookList :items="items" flag="search" />
-    </template>
+    <Row>
+      <BookList v-if="items.length" :items="items" flag="search" />
+      <i-col :xs="{ span: 24 }" :lg="{ span: 12 }">
+        <Spin v-if="spinShow" size="large" fix>
+          <Icon type="ios-loading" size="18" class="demo-spin-icon-load" />
+          <div>Loading...</div>
+        </Spin>
+      </i-col>
+    </Row>
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import axios from 'axios'
 import _ from 'lodash'
 import { SearchData } from '~/types/book'
+import { googleBooksApi } from '~/api/index'
 import BookList from '~/components/molecules/BookList.vue'
 import Search from '~/components/molecules/Search.vue'
 
@@ -35,12 +40,12 @@ import Search from '~/components/molecules/Search.vue'
 export default class SearchDb extends Vue {
   keyword: string = ''
   message: string = ''
-  select: string = 'book'
+  spinShow: boolean = false
   items: SearchData[] = []
 
   onKeywordChanged(keyword: string) {
     this.keyword = keyword
-    this.message = 'waiting for you stop typing...'
+    this.spinShow = true
     this.debouncedGetAnswer()
   }
 
@@ -57,37 +62,42 @@ export default class SearchDb extends Vue {
 
   debouncedGetAnswer() {}
 
-  async getAnswer() {
+  getAnswer() {
     if (this.keyword === '') {
       this.items = []
-      this.message = ''
+      this.spinShow = false
       return
     }
 
-    this.message = 'Loading...'
+    googleBooksApi(this.keyword)
+      .then(res => {
+        for (const [index, item] of res.data.items.entries()) {
+          if (item.volumeInfo) {
+            this.items.push({
+              title: item.volumeInfo.title || '',
+              authors: item.volumeInfo.authors || [],
+              description: item.volumeInfo.description || '',
+              publishedDate: item.volumeInfo.publishedDate || '',
+              publisher: item.volumeInfo.publisher || ''
+            })
 
-    const res = await axios.get(
-      'https://www.googleapis.com/books/v1/volumes?q=' +
-        this.keyword +
-        '&maxResults=40'
-    )
-
-    this.message = ''
-    // TODO: error handling
-    for (const [index, item] of res.data.items.entries()) {
-      if (item.volumeInfo) {
-        this.items.push({
-          title: item.volumeInfo.title,
-          authors: item.volumeInfo.authors,
-          description: item.volumeInfo.description,
-          publishedDate: item.volumeInfo.publishedDate,
-          publisher: item.volumeInfo.publisher
-        })
-        if (item.volumeInfo.imageLinks) {
-          this.items[index].bookImage = item.volumeInfo.imageLinks.thumbnail
+            if (item.volumeInfo.imageLinks) {
+              this.items[index].bookImage = item.volumeInfo.imageLinks.thumbnail
+            }
+          }
         }
-      }
-    }
+
+        this.spinShow = false
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 </script>
+
+<style scoped>
+.demo-spin-icon-load {
+  animation: ani-demo-spin 1s linear infinite;
+}
+</style>

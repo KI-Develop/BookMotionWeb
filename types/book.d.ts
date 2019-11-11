@@ -30,5 +30,5 @@ export interface WishlistData extends BookData {
 export interface SearchData extends BookData {}
 
 export interface AddWishlistData extends AddBookData {
-  items: WishlistData
+  items: SearchData
 }

@@ -13,8 +13,12 @@
             {{ author }}
           </span>
         </template>
-        <p>出版社: {{ item.publisher }}</p>
-        <p>出版日: {{ item.publishedDate }}</p>
+        <template v-if="item.publisher">
+          <p>出版社: {{ item.publisher }}</p>
+        </template>
+        <template v-if="item.publishedDate">
+          <p>出版日: {{ item.publishedDate }}</p>
+        </template>
         <template v-if="flag === 'tsundoku'">
           <template slot="action">
             <Progress
@@ -77,7 +81,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import * as firebase from 'firebase/app'
-import { BookData, AddWishlistData } from '@/types/book'
+import { BookData, AddWishlistData, SearchData } from '@/types/book'
 import { db } from '~/plugins/firebase'
 
 @Component
@@ -103,12 +107,26 @@ export default class BookList extends Vue {
     this.$Notice.success({
       title:
         bookType === 'tsundoku'
-          ? '本を積みました。'
-          : '気になる本に追加しました。'
+          ? '積み本に追加しました。'
+          : '気になる本に追加しました。',
+      render: h => {
+        return h('span', [
+          h(
+            'a',
+            {
+              attrs: {
+                href: '/list/' + bookType
+              }
+            },
+            bookType === 'tsundoku' ? '積み本一覧' : '気になる本一覧'
+          ),
+          'を確認する。'
+        ])
+      }
     })
   }
 
-  addWishlist(item: any): void {
+  addWishlist(item: SearchData): void {
     const wishlistData: AddWishlistData = {
       userId: this.$store.state.auth.uid,
       bookStatus: 'wishlist',
@@ -126,7 +144,7 @@ export default class BookList extends Vue {
 
   addTsundoku(item: any): void {
     // TODO: dbに追加
-    console.log(item)
+    this.success('tsundoku')
   }
 }
 </script>
