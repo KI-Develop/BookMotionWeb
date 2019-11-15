@@ -1,6 +1,6 @@
 <template>
   <Modal
-    v-model="modal1"
+    v-model="dialog"
     ok-text="登録"
     cancel-text="キャンセル"
     title="詳細設定"
@@ -35,13 +35,17 @@ export default class BookModal extends Vue {
   @Prop({ default: '' })
   cancelEmitName!: string
 
+  @Prop({ default: false })
+  dialog!: boolean
+
+  value1: number = 0
+
   ok() {
+    this.$emit('update:dialog', false)
     this.$emit(this.okEmitName)
-    // this.success('tsundoku')
   }
   cancel() {
-    // this.$Message.info('Clicked cancel')
-    this.$emit(this.cancelEmitName)
+    this.$emit('update:dialog', false)
   }
 }
 </script>

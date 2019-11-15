@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO: 中央寄せ or 二列にする -->
   <div>
     <Card>
       <List item-layout="vertical">
@@ -78,42 +77,11 @@
         </ListItem>
       </List>
     </Card>
-    <!-- TODO: リファクタリング後消す -->
-    <!-- <Modal
-      v-model="modal1"
-      ok-text="登録"
-      cancel-text="キャンセル"
-      title="詳細設定"
-      @on-ok="ok"
-      @on-cancel="cancel"
-    >
-      <span>読書開始日</span><Divider type="vertical" />
-      <DatePicker type="date" placeholder="読書開始日" style="width: 200px" />
-      <Icon type="ios-information-circle-outline" />
-      <br />
-      <span>読書終了予定日</span><Divider type="vertical" />
-      <DatePicker
-        type="date"
-        placeholder="読書終了予定日"
-        style="width: 200px"
-      />
-      <Icon type="ios-information-circle-outline" />
-      <Divider />
-      <span>しおり</span><Divider type="vertical" />
-      <InputNumber v-model="value1" :max="10" :min="1" />
-      <Icon type="ios-information-circle-outline" />
-      <br />
-      <span>総ページ数</span><Divider type="vertical" />
-      <InputNumber v-model="value1" :max="10" :min="1" />
-      <Icon type="ios-information-circle-outline" />
-    </Modal> -->
   </div>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import * as firebase from 'firebase/app'
-import { BookData, AddWishlistData, SearchData } from '@/types/book'
-import { db } from '~/plugins/firebase'
+import { BookData, SearchData } from '@/types/book'
 
 @Component
 export default class BookList extends Vue {
@@ -121,10 +89,6 @@ export default class BookList extends Vue {
   items!: BookData[]
   @Prop({ default: '' })
   flag!: string
-
-  value8: number = 300
-  modal1: boolean = false
-  value1: number = 0
 
   descriptionLength(description: string): string {
     if (description) {
@@ -135,57 +99,15 @@ export default class BookList extends Vue {
     return description
   }
 
-  ok() {
-    this.success('tsundoku')
-  }
-  cancel() {
-    this.$Message.info('Clicked cancel')
-  }
-
-  // TODO: 変数リファクタリング
-  success(bookType: string): void {
-    this.$Notice.success({
-      title:
-        bookType === 'tsundoku'
-          ? '積み本に追加しました。'
-          : '気になる本に追加しました。',
-      render: h => {
-        return h('span', [
-          h(
-            'a',
-            {
-              attrs: {
-                href: '/list/' + bookType
-              }
-            },
-            bookType === 'tsundoku' ? '積み本一覧' : '気になる本一覧'
-          ),
-          'を確認する。'
-        ])
-      }
-    })
-  }
-
-  addWishlist(item: SearchData): void {
-    const wishlistData: AddWishlistData = {
-      userId: this.$store.state.auth.uid,
-      bookStatus: 'wishlist',
-      bookType: 'book',
-      items: item,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    }
-    db.collection('books')
-      .add(wishlistData)
-      .then(res => {
-        this.success('wishlist')
-      })
-      .catch(err => console.log(err))
-  }
-
   addTsundoku(item: any): void {
-    // TODO: dbに追加
-    this.modal1 = true
-    // this.success('tsundoku')
+    if (this.flag === 'search') {
+      this.$emit('searchAddTsundoku', item)
+    }
+  }
+  addWishlist(item: SearchData): void {
+    if (this.flag === 'search') {
+      this.$emit('searchAddWishlist', item)
+    }
   }
 }
 </script>
