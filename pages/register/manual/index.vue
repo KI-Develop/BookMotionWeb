@@ -1,10 +1,15 @@
 <template>
-  <p>manul page</p>
+  <ManualInput />
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import ManualInput from '~/components/molecules/ManualInput.vue'
 
-@Component
+@Component({
+  components: {
+    ManualInput
+  }
+})
 export default class index extends Vue {
   mounted() {
     this.$nuxt.$emit('updatePageName', [
