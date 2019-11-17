@@ -33,7 +33,7 @@ export default class WishList extends Vue {
 
   mounted() {
     this.$nuxt.$emit('updatePageName', [
-      { name: '書籍一覧', path: '' },
+      { name: 'ホーム', path: '' },
       { name: '気になる本', path: '/list/wishlist' }
     ])
   }

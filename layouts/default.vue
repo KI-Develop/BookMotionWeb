@@ -18,8 +18,8 @@
         >
           <Submenu name="1">
             <template slot="title">
-              <Icon type="ios-list" />
-              <span>書籍一覧</span>
+              <Icon type="md-home" />
+              <span>ホーム</span>
             </template>
             <MenuItem name="1-1" @click.native="pageLink('/list/tsundoku')">
               <span>積み本</span>
@@ -30,8 +30,8 @@
           </Submenu>
           <Submenu name="2">
             <template slot="title">
-              <Icon type="ios-add-circle" />
-              <span>書籍登録</span>
+              <Icon type="md-create" />
+              <span>本の登録</span>
             </template>
             <MenuItem name="2-1" @click.native="pageLink('/register/searchdb')">
               <span>データベース検索</span>
