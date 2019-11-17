@@ -88,9 +88,6 @@
         <Button type="primary" @click="handleSubmit('formValidate')">
           登録
         </Button>
-        <Button style="margin-left: 8px" @click="handleReset('formValidate')">
-          Reset
-        </Button>
       </FormItem>
     </Form>
   </Card>
@@ -163,10 +160,13 @@ export default class ManualInput extends Vue {
     ]
   }
 
-  handleSubmit(name) {
+  handleSubmit(name: string) {
     this.$refs[name].validate(valid => {
       if (valid) {
         this.$Message.success('Success!')
+        // TODO: formValidateをdbに追加する
+        this.$emit('hoge', this.formValidate)
+        console.log(this.formValidate)
       } else {
         this.$Message.error('Fail!')
       }

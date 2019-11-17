@@ -1,19 +1,19 @@
 <template>
-  <ManualInput />
+  <BookInput />
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import ManualInput from '~/components/molecules/ManualInput.vue'
+import BookInput from '~/components/molecules/BookInput.vue'
 
 @Component({
   components: {
-    ManualInput
+    BookInput
   }
 })
 export default class index extends Vue {
   mounted() {
     this.$nuxt.$emit('updatePageName', [
-      { name: '書籍登録', path: '' },
+      { name: '本の登録', path: '' },
       { name: '手動入力', path: '/register/manual' }
     ])
   }
