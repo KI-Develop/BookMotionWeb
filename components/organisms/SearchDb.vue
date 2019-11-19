@@ -18,12 +18,13 @@
         :items="items"
         flag="search"
         @searchAddTsundoku="addTsundoku"
-        @searchAddWishlist="dialog = false"
+        @searchAddWishlist="addWishlist"
       />
       <BookModal
         :dialog.sync="dialog"
         ok-emit-name="searchDbOk"
-        cancel-emit-name="searchDbCancel"
+        :item="item"
+        :total-page-count="totalPageCount"
         @searchDbOk="ok"
       />
       <i-col :xs="{ span: 24 }" :lg="{ span: 12 }">
@@ -39,12 +40,11 @@
 import { Component, Vue } from 'vue-property-decorator'
 import _ from 'lodash'
 import * as firebase from 'firebase/app'
-import { SearchData, AddWishlistData } from '~/types/book'
-import { googleBooksApi } from '~/api/index'
+import { SearchData, AddWishlistData, AddTsundokuData } from '~/types/book'
+import { googleBooksApi, addTsundoku, addWishlist } from '~/api/index'
 import BookList from '~/components/molecules/BookList.vue'
 import BookModal from '~/components/molecules/BookModal.vue'
 import Search from '~/components/molecules/Search.vue'
-import { db } from '~/plugins/firebase'
 
 @Component({
   components: {
@@ -58,6 +58,8 @@ export default class SearchDb extends Vue {
   message: string = ''
   spinShow: boolean = false
   items: SearchData[] = []
+  item: SearchData = {}
+  totalPageCount: number = 0
   dialog: boolean = false
 
   onKeywordChanged(keyword: string) {
@@ -95,7 +97,8 @@ export default class SearchDb extends Vue {
               authors: item.volumeInfo.authors || [],
               description: item.volumeInfo.description || '',
               publishedDate: item.volumeInfo.publishedDate || '',
-              publisher: item.volumeInfo.publisher || ''
+              publisher: item.volumeInfo.publisher || '',
+              totalPageCount: item.volumeInfo.pageCount || 0
             })
 
             if (item.volumeInfo.imageLinks) {
@@ -111,8 +114,10 @@ export default class SearchDb extends Vue {
       })
   }
 
-  addTsundoku(item: any) {
+  addTsundoku(item: SearchData) {
     // TODO: dbに追加
+    this.totalPageCount = item.totalPageCount || 0
+    this.item = item
     this.dialog = true
   }
 
@@ -124,16 +129,36 @@ export default class SearchDb extends Vue {
       items: item,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     }
-    db.collection('books')
-      .add(wishlistData)
+    addWishlist(wishlistData)
       .then(res => {
         this.success('wishlist')
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.log(err)
+        this.error()
+      })
   }
 
-  ok() {
-    this.success('tsundoku')
+  ok(tsundokuData: any) {
+    // TODO: itemをapiに追加
+    const addTsundokuData: AddTsundokuData = {
+      userId: this.$store.state.auth.uid,
+      bookStatus: 'tsundoku',
+      bookType: 'book',
+      readingStartDate: tsundokuData.readingStartDate,
+      readingEndDate: tsundokuData.readingEndDate,
+      currentPageCount: tsundokuData.currentPageCount,
+      items: tsundokuData.item,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }
+    addTsundoku(addTsundokuData)
+      .then(res => {
+        this.success('tsundoku')
+      })
+      .catch(err => {
+        console.log(err)
+        this.error()
+      })
   }
   cancel(dialogVisible: boolean) {
     this.dialog = dialogVisible
@@ -159,6 +184,12 @@ export default class SearchDb extends Vue {
           'を確認する。'
         ])
       }
+    })
+  }
+
+  error() {
+    this.$Notice.error({
+      title: '追加に失敗しました。'
     })
   }
 }

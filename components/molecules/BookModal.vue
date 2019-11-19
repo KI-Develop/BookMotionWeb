@@ -8,20 +8,36 @@
     @on-cancel="cancel"
   >
     <span>読書開始日</span><Divider type="vertical" />
-    <DatePicker type="date" placeholder="読書開始日" style="width: 200px" />
+    <DatePicker
+      v-model="formValidate.readingStartDate"
+      type="date"
+      placeholder="読書開始日"
+      style="width: 200px"
+    />
     <Icon type="ios-information-circle-outline" />
     <br />
     <span>読書終了予定日</span><Divider type="vertical" />
-    <DatePicker type="date" placeholder="読書終了予定日" style="width: 200px" />
+    <DatePicker
+      v-model="formValidate.readingEndDate"
+      type="date"
+      placeholder="読書終了予定日"
+      style="width: 200px"
+    />
     <Icon type="ios-information-circle-outline" />
     <Divider />
     <span>しおり</span><Divider type="vertical" />
-    <InputNumber v-model="value1" :max="10" :min="1" />
+    <InputNumber
+      v-model="formValidate.currentPageCount"
+      :max="10000"
+      :min="0"
+    />
     <Icon type="ios-information-circle-outline" />
     <br />
-    <span>総ページ数</span><Divider type="vertical" />
-    <InputNumber v-model="value1" :max="10" :min="1" />
-    <Icon type="ios-information-circle-outline" />
+    <template v-if="!totalPageCount">
+      <span>総ページ数</span><Divider type="vertical" />
+      <InputNumber v-model="manuTotalPageCount" :max="10000" :min="0" />
+      <Icon type="ios-information-circle-outline" />
+    </template>
   </Modal>
 </template>
 <script lang="ts">
@@ -38,11 +54,33 @@ export default class BookModal extends Vue {
   @Prop({ default: false })
   dialog!: boolean
 
-  value1: number = 0
+  @Prop({ default: {} })
+  item!: any
+
+  @Prop({ default: 0 })
+  totalPageCount!: number
+
+  manuTotalPageCount: number = 0
+
+  formValidate: any = {
+    readingStartDate: '',
+    readingEndDate: '',
+    currentPageCount: 0,
+    item: []
+  }
 
   ok() {
+    if (this.item) {
+      this.formValidate.item = this.item
+    }
+    if (this.totalPageCount) {
+      this.item.totalPageCount = this.totalPageCount
+    } else {
+      this.item.totalPageCount = this.manuTotalPageCount
+    }
+    console.log(this.formValidate)
     this.$emit('update:dialog', false)
-    this.$emit(this.okEmitName)
+    this.$emit(this.okEmitName, this.formValidate)
   }
   cancel() {
     this.$emit('update:dialog', false)
