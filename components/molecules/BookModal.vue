@@ -1,12 +1,5 @@
 <template>
-  <Modal
-    v-model="dialog"
-    ok-text="登録"
-    cancel-text="キャンセル"
-    title="詳細設定"
-    @on-ok="ok"
-    @on-cancel="cancel"
-  >
+  <Modal v-model="dialog" title="詳細設定">
     <span>読書開始日</span><Divider type="vertical" />
     <DatePicker
       v-model="formValidate.readingStartDate"
@@ -38,6 +31,14 @@
       <InputNumber v-model="manuTotalPageCount" :max="10000" :min="0" />
       <Icon type="ios-information-circle-outline" />
     </template>
+    <div slot="footer">
+      <Button size="large" @click="cancel">
+        キャンセル
+      </Button>
+      <Button type="primary" size="large" ghost @click="ok">
+        登録
+      </Button>
+    </div>
   </Modal>
 </template>
 <script lang="ts">
@@ -69,7 +70,7 @@ export default class BookModal extends Vue {
     item: []
   }
 
-  ok() {
+  ok(): void {
     if (this.item) {
       this.formValidate.item = this.item
     }
@@ -78,11 +79,10 @@ export default class BookModal extends Vue {
     } else {
       this.item.totalPageCount = this.manuTotalPageCount
     }
-    console.log(this.formValidate)
     this.$emit('update:dialog', false)
     this.$emit(this.okEmitName, this.formValidate)
   }
-  cancel() {
+  cancel(): void {
     this.$emit('update:dialog', false)
   }
 }

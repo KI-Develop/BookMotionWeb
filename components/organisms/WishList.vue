@@ -9,13 +9,20 @@
       :items="tsundokuData"
       :flag="flag"
       @wishAddTsundoku="addTsundoku"
+      @wishRemoveWishlist="removeWishlist"
     />
     <BookModal
       :dialog.sync="dialog"
-      ok-emit-name="wishlistOk"
       :item="item"
       :total-page-count="totalPageCount"
+      ok-emit-name="wishlistOk"
       @wishlistOk="ok"
+    />
+    <RemoveModal
+      :dialog.sync="removeDialog"
+      :item="removeItem"
+      remove-emit-name="wishlistRemove"
+      @wishlistRemove="remove"
     />
   </div>
 </template>
@@ -23,12 +30,13 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import BookList from '@/components/molecules/BookList.vue'
 import BookModal from '~/components/molecules/BookModal.vue'
+import RemoveModal from '~/components/molecules/RemoveModal.vue'
 import Refine from '@/components/molecules/Refine.vue'
 import { WishlistData, SearchData } from '@/types/book'
 import { db } from '~/plugins/firebase'
 
 @Component({
-  components: { BookList, Refine, BookModal }
+  components: { BookList, Refine, BookModal, RemoveModal }
 })
 export default class WishList extends Vue {
   @Prop({ default: {} })
@@ -37,7 +45,9 @@ export default class WishList extends Vue {
   flag: string = 'wishlist'
   totalPageCount: number = 0
   item: SearchData = {}
+  removeItem: any = {}
   dialog: boolean = false
+  removeDialog: boolean = false
 
   bookCriteria: Array<string> = [
     'すべて表示',
@@ -54,10 +64,29 @@ export default class WishList extends Vue {
     ])
   }
 
-  addTsundoku(item) {
+  addTsundoku(item: any) {
     this.totalPageCount = item.totalPageCount || 0
     this.item = item
     this.dialog = true
+  }
+
+  removeWishlist(removeItem: any) {
+    this.removeItem = removeItem
+    this.removeDialog = true
+  }
+  remove(removeItem: any) {
+    // TODO: firestoreから削除 && thenの後removeItemを空にする。
+    // console.log('removeItem =>', removeItem.id)
+    db.collection('books')
+      .doc(removeItem.id)
+      .delete()
+      .then(() => {
+        this.removeItem = {}
+        this.$Notice.success({ title: '削除しました。' })
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   ok(tsundokuData: any) {

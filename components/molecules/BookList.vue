@@ -63,7 +63,10 @@
                 <Icon type="md-add" /> 積み本に追加
               </li>
               <li><Icon type="md-create" /> 編集</li>
-              <li><Icon type="ios-remove-circle-outline" /> 削除</li>
+              <li @click="removeWishlist(item)">
+                <Icon type="ios-remove-circle-outline" />
+                削除
+              </li>
             </template>
           </template>
           <template v-if="flag === 'search'">
@@ -119,6 +122,11 @@ export default class BookList extends Vue {
   addWishlist(item: SearchData): void {
     if (this.flag === 'search') {
       this.$emit('searchAddWishlist', item)
+    }
+  }
+  removeWishlist(item: any): void {
+    if (this.flag === 'wishlist') {
+      this.$emit('wishRemoveWishlist', item)
     }
   }
 }
