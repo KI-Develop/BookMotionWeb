@@ -1,4 +1,5 @@
 interface BookData {
+  id?: string
   title?: string
   authors?: Array<string>
   description?: string
@@ -15,11 +16,9 @@ interface AddBookData {
 }
 
 export interface TsundokuData extends BookData {
-  id?: number
   readingStartDate?: string
   readingEndDate?: string
   readingEndExpectedDate?: string
-  achievementRate?: number
   currentPageCount?: number
   totalPageCount?: number
 }
@@ -27,8 +26,17 @@ export interface WishlistData extends BookData {
   createdAt?: Date
 }
 
-export interface SearchData extends BookData {}
+export interface SearchData extends BookData {
+  totalPageCount?: number
+}
 
 export interface AddWishlistData extends AddBookData {
+  items: SearchData
+}
+
+export interface AddTsundokuData extends AddBookData {
+  readingStartDate: string
+  readingEndDate: string
+  currentPageCount: number
   items: SearchData
 }

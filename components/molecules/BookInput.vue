@@ -17,8 +17,8 @@
       <FormItem label="出版社" prop="publisher">
         <Input placeholder="出版社を入力" />
       </FormItem>
-      <FormItem label="分類" prop="division">
-        <RadioGroup v-model="formValidate.division">
+      <FormItem label="分類" prop="bookStatus">
+        <RadioGroup v-model="formValidate.bookStatus">
           <Radio label="tsundoku">
             積み本
           </Radio>
@@ -27,7 +27,7 @@
           </Radio>
         </RadioGroup>
       </FormItem>
-      <FormItem v-if="formValidate.division == 'tsundoku'" label="読書期間">
+      <FormItem v-if="formValidate.bookStatus == 'tsundoku'" label="読書期間">
         <Row>
           <i-col :xs="{ span: 24 }" :lg="{ span: 6 }">
             <FormItem prop="readingStartDate">
@@ -51,7 +51,7 @@
           </i-col>
         </Row>
       </FormItem>
-      <FormItem v-if="formValidate.division == 'tsundoku'" label="ページ記録">
+      <FormItem v-if="formValidate.bookStatus == 'tsundoku'" label="ページ記録">
         <Row>
           <i-col :xs="{ span: 24 }" :lg="{ span: 6 }">
             <span>しおり</span>
@@ -93,15 +93,18 @@
   </Card>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component
 export default class ManualInput extends Vue {
+  @Prop({ default: '' })
+  okEmitName!: string
+
   formValidate: any = {
     title: '',
     author: '',
     publisher: '',
-    division: '',
+    bookStatus: '',
     readingStartDate: '',
     readingEndDate: '',
     currentPageCount: 0,
@@ -122,7 +125,7 @@ export default class ManualInput extends Vue {
       { required: false, trigger: 'change' },
       { type: 'string', max: 100, message: '100文字以下にしてください。' }
     ],
-    division: [
+    bookStatus: [
       {
         required: true,
         message: '『積み本』か『気になる本』を選択してください。',
@@ -146,15 +149,11 @@ export default class ManualInput extends Vue {
       }
     ],
     desc: [
-      {
-        required: false,
-        message: 'Please enter a personal introduction',
-        trigger: 'blur'
-      },
+      { required: false, trigger: 'blur' },
       {
         type: 'string',
-        min: 20,
-        message: 'Introduce no less than 20 words',
+        max: 200,
+        message: '200文字以下にしてください。',
         trigger: 'blur'
       }
     ]
@@ -164,16 +163,11 @@ export default class ManualInput extends Vue {
     this.$refs[name].validate(valid => {
       if (valid) {
         this.$Message.success('Success!')
-        // TODO: formValidateをdbに追加する
-        this.$emit('hoge', this.formValidate)
-        console.log(this.formValidate)
+        this.$emit(this.okEmitName, this.formValidate)
       } else {
         this.$Message.error('Fail!')
       }
     })
-  }
-  handleReset(name) {
-    this.$refs[name].resetFields()
   }
 }
 </script>

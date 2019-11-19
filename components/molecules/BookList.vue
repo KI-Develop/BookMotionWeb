@@ -22,7 +22,10 @@
           <template v-if="flag === 'tsundoku'">
             <template slot="action">
               <Progress
-                :percent="item.achievementRate"
+                v-if="item.totalPageCount"
+                :percent="
+                  achievementRate(item.currentPageCount, item.totalPageCount)
+                "
                 :stroke-color="['#108ee9', '#87d068']"
               />
               <li>
@@ -56,9 +59,14 @@
             <p>追加日: {{ item.createdAt }}</p>
             <template slot="action">
               <!-- TODO: 気になる本からは消えることを警告する -->
-              <li><Icon type="md-add" /> 積み本に追加</li>
+              <li @click="addTsundoku(item)">
+                <Icon type="md-add" /> 積み本に追加
+              </li>
               <li><Icon type="md-create" /> 編集</li>
-              <li><Icon type="ios-remove-circle-outline" /> 削除</li>
+              <li @click="removeWishlist(item)">
+                <Icon type="ios-remove-circle-outline" />
+                削除
+              </li>
             </template>
           </template>
           <template v-if="flag === 'search'">
@@ -90,6 +98,10 @@ export default class BookList extends Vue {
   @Prop({ default: '' })
   flag!: string
 
+  achievementRate(currentPageCount: number, totalPageCount: number) {
+    return Math.round((currentPageCount / totalPageCount) * 100)
+  }
+
   descriptionLength(description: string): string {
     if (description) {
       return description.length >= 200
@@ -103,10 +115,18 @@ export default class BookList extends Vue {
     if (this.flag === 'search') {
       this.$emit('searchAddTsundoku', item)
     }
+    if (this.flag === 'wishlist') {
+      this.$emit('wishAddTsundoku', item)
+    }
   }
   addWishlist(item: SearchData): void {
     if (this.flag === 'search') {
       this.$emit('searchAddWishlist', item)
+    }
+  }
+  removeWishlist(item: any): void {
+    if (this.flag === 'wishlist') {
+      this.$emit('wishRemoveWishlist', item)
     }
   }
 }

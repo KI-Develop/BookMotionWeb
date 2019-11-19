@@ -1,7 +1,11 @@
 <template>
   <div>
     <!-- ない時の処理書く -->
-    <WishList :tsundoku-data="items" />
+    <WishList
+      v-if="items.length"
+      :tsundoku-data="items"
+      @getWishlistDatahoge="getBookData"
+    />
   </div>
 </template>
 
@@ -25,16 +29,33 @@ export default class Index extends Vue {
     this.getBookData()
   }
 
+  mounted() {
+    this.$nuxt.$emit('updatePageName', [
+      { name: 'ホーム', path: '' },
+      { name: '気になる本', path: '/list/wishlist' }
+    ])
+  }
+
+  fromTimeStampToDate(date: any): string {
+    const d = new Date(date.seconds * 1000)
+    const year = d.getFullYear()
+    const month = `0${d.getMonth() + 1}`.slice(-2)
+    const day = `0${d.getDate()}`.slice(-2)
+    return `${year}-${month}-${day}`
+  }
   async getBookData() {
     const snapShot = await db
       .collection('books')
       .where('userId', '==', this.$store.state.auth.uid)
+      .where('bookStatus', '==', 'wishlist')
       .get()
     snapShot.forEach(doc => {
       const data = doc.data().items
-      data.createdAt = doc.data().createdAt.toDate()
+      data.id = doc.id
+      data.createdAt = this.fromTimeStampToDate(doc.data().createdAt)
       this.items.push(data)
     })
+    console.log('wishlist index', this.items)
   }
 }
 </script>
