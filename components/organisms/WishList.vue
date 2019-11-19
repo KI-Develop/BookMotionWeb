@@ -15,6 +15,7 @@
       :dialog.sync="dialog"
       :item="item"
       :total-page-count="totalPageCount"
+      title="積み本に追加"
       ok-emit-name="wishlistOk"
       @wishlistOk="ok"
     />

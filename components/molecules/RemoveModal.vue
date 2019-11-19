@@ -1,5 +1,5 @@
 <template>
-  <Modal v-model="dialog" width="360">
+  <Modal v-model="dialog" :closable="false" width="360">
     <p slot="header" style="color:#f60;text-align:center">
       <Icon type="ios-information-circle" />
       <span>気になる本を削除</span>
