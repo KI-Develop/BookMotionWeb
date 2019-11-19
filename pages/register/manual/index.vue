@@ -1,13 +1,13 @@
 <template>
-  <BookInput />
+  <Manual />
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import BookInput from '~/components/molecules/BookInput.vue'
+import Manual from '~/components/organisms/Manual.vue'
 
 @Component({
   components: {
-    BookInput
+    Manual
   }
 })
 export default class index extends Vue {
