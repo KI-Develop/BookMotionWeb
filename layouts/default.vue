@@ -54,7 +54,7 @@
             <MenuItem name="3-2">
               <span>木の成長</span>
             </MenuItem>
-            <MenuItem name="3-3">
+            <MenuItem name="3-3" @click.native="logout">
               <span>ログアウト</span>
             </MenuItem>
           </Submenu>
@@ -104,6 +104,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { auth } from '~/plugins/firebase'
 
 @Component
 export default class Default extends Vue {
@@ -133,6 +134,18 @@ export default class Default extends Vue {
 
   pageLink(path: string): void {
     this.$router.push(path)
+  }
+
+  logout(): void {
+    auth.onAuthStateChanged(user => {
+      auth
+        .signOut()
+        .then(() => {})
+        .catch(error => {
+          console.log(error)
+        })
+    })
+    this.$store.commit('auth/logout')
   }
 }
 </script>
