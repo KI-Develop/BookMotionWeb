@@ -1,5 +1,5 @@
 <template>
-  <Modal v-model="dialog" :closable="false">
+  <Modal v-model="dialog" :closable="false" :mask-closable="false">
     <p slot="header" style="text-align:center">
       <span>{{ title }}</span>
     </p>
@@ -13,15 +13,15 @@
     >
       <FormItem label="読書開始日" prop="readingStartDate">
         <DatePicker
-          v-model="formValidate.readingStartDate"
+          v-model="readingStartDate"
           type="date"
           placeholder="読書開始日"
           style="width: 200px"
         />
       </FormItem>
-      <FormItem label="読書終了予定日" prop="readingEndDate">
+      <FormItem label="読書終了予定日" prop="readingEndExpectedDate">
         <DatePicker
-          v-model="formValidate.readingEndDate"
+          v-model="readingEndExpectedDate"
           type="date"
           placeholder="読書開始日"
           style="width: 200px"
@@ -29,49 +29,14 @@
         <Icon type="ios-information-circle-outline" />
       </FormItem>
       <FormItem label="しおり" prop="title">
-        <InputNumber
-          v-model="formValidate.currentPageCount"
-          :max="10000"
-          :min="0"
-        />
+        <InputNumber v-model="currentPageCount" :max="10000" :min="0" />
         <Icon type="ios-information-circle-outline" />
       </FormItem>
-      <FormItem v-if="!totalPageCount" label="総ページ数" prop="title">
-        <InputNumber v-model="manuTotalPageCount" :max="10000" :min="0" />
+      <FormItem label="総ページ数" prop="title">
+        <InputNumber v-model="totalPageCount" :max="10000" :min="0" />
         <Icon type="ios-information-circle-outline" />
       </FormItem>
     </Form>
-    <!-- <span>読書開始日</span><Divider type="vertical" />
-    <DatePicker
-      v-model="formValidate.readingStartDate"
-      type="date"
-      placeholder="読書開始日"
-      style="width: 200px"
-    />
-    <Icon type="ios-information-circle-outline" />
-    <br />
-    <span>読書終了予定日</span><Divider type="vertical" />
-    <DatePicker
-      v-model="formValidate.readingEndDate"
-      type="date"
-      placeholder="読書終了予定日"
-      style="width: 200px"
-    />
-    <Icon type="ios-information-circle-outline" />
-    <Divider />
-    <span>しおり</span><Divider type="vertical" />
-    <InputNumber
-      v-model="formValidate.currentPageCount"
-      :max="10000"
-      :min="0"
-    />
-    <Icon type="ios-information-circle-outline" />
-    <br />
-    <template v-if="!totalPageCount">
-      <span>総ページ数</span><Divider type="vertical" />
-      <InputNumber v-model="manuTotalPageCount" :max="10000" :min="0" />
-      <Icon type="ios-information-circle-outline" />
-    </template> -->
     <div slot="footer">
       <Button size="large" @click="cancel">
         キャンセル
@@ -95,9 +60,6 @@ export default class BookModal extends Vue {
   @Prop({ default: '' })
   okEmitName!: string
 
-  @Prop({ default: '' })
-  cancelEmitName!: string
-
   @Prop({ default: false })
   dialog!: boolean
 
@@ -107,32 +69,56 @@ export default class BookModal extends Vue {
   @Prop({ default: '' })
   title!: string
 
-  @Prop({ default: 0 })
-  totalPageCount!: number
-
-  manuTotalPageCount: number = 0
+  _totalPageCount: number = 0
 
   formValidate: any = {
     readingStartDate: '',
-    readingEndDate: '',
+    readingEndExpectedDate: '',
     currentPageCount: 0,
     item: []
   }
+
+  get readingStartDate() {
+    return this.item.readingStartDate
+  }
+  set readingStartDate(readingStartDate: string) {
+    this.formValidate.readingStartDate = readingStartDate
+  }
+
+  get readingEndExpectedDate() {
+    return this.item.readingEndExpectedDate
+  }
+  set readingEndExpectedDate(readingEndExpectedDate: string) {
+    this.formValidate.readingEndExpectedDate = readingEndExpectedDate
+  }
+
+  get currentPageCount() {
+    return this.item.currentPageCount || 0
+  }
+  set currentPageCount(currentPageCount: number) {
+    this.formValidate.currentPageCount = currentPageCount
+  }
+
+  get totalPageCount() {
+    return this.item.totalPageCount
+  }
+  set totalPageCount(totalPageCount: number) {
+    this._totalPageCount = totalPageCount
+  }
+
   ruleValidate: any = {
     readingStartDate: [
       {
         required: true,
         type: 'date',
-        message: '読書開始日を選択してください。',
-        trigger: 'change'
+        message: '読書開始日を選択してください。'
       }
     ],
-    readingEndDate: [
+    readingEndExpectedDate: [
       {
         required: true,
         type: 'date',
-        message: '読書終了予定日を選択してください。',
-        trigger: 'change'
+        message: '読書終了予定日を選択してください。'
       }
     ]
   }
@@ -143,18 +129,24 @@ export default class BookModal extends Vue {
         if (this.item) {
           this.formValidate.item = this.item
         }
-        if (this.totalPageCount) {
-          this.item.totalPageCount = this.totalPageCount
-        } else {
-          this.item.totalPageCount = this.manuTotalPageCount
-        }
+        this.item.totalPageCount =
+          this._totalPageCount || this.item.totalPageCount
         this.$emit('update:dialog', false)
         this.$emit(this.okEmitName, this.formValidate)
       }
     })
+    this.formValidateClear()
   }
   cancel(): void {
     this.$emit('update:dialog', false)
+    this.formValidateClear()
+  }
+
+  formValidateClear() {
+    this.formValidate.readingStartDate = ''
+    this.formValidate.readingEndExpectedDate = ''
+    this.formValidate.currentPageCount = 0
+    this.formValidate.item = []
   }
 }
 </script>

@@ -36,7 +36,7 @@ export interface AddWishlistData extends AddBookData {
 
 export interface AddTsundokuData extends AddBookData {
   readingStartDate: string
-  readingEndDate: string
+  readingEndExpectedDate: string
   currentPageCount: number
   items: SearchData
 }

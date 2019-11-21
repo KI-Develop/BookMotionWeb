@@ -7,7 +7,7 @@
             :title="item.title"
             :description="descriptionLength(item.description)"
           />
-          <template v-if="item.authors">
+          <template v-if="item.authors[0]">
             著者:
             <span v-for="author in item.authors" :key="author.id">
               {{ author }}
@@ -41,17 +41,14 @@
                 <Icon type="ios-book-outline" /> 総ページ数:
                 {{ item.totalPageCount }}
               </li>
-              <li>
+              <li @click="editTsundoku(item)">
                 <Icon type="md-create" />
-                <nuxt-link :to="'tsundoku/' + item.id">
-                  編集
-                </nuxt-link>
+                編集
               </li>
             </template>
             <br />
             <br />
             <p>読書開始日: {{ item.readingStartDate }}</p>
-            <p>読書終了日: {{ item.readingEndDate }}</p>
             <p>読書終了予定日: {{ item.readingEndExpectedDate }}</p>
           </template>
           <template v-if="flag === 'wishlist'">
@@ -127,6 +124,11 @@ export default class BookList extends Vue {
   removeWishlist(item: any): void {
     if (this.flag === 'wishlist') {
       this.$emit('wishRemoveWishlist', item)
+    }
+  }
+  editTsundoku(item: any): void {
+    if (this.flag === 'tsundoku') {
+      this.$emit('tsunEditTsundoku', item)
     }
   }
 }

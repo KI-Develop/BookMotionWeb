@@ -14,7 +14,6 @@
     <BookModal
       :dialog.sync="dialog"
       :item="item"
-      :total-page-count="totalPageCount"
       title="積み本に追加"
       ok-emit-name="wishlistOk"
       @wishlistOk="ok"
@@ -44,7 +43,6 @@ export default class WishList extends Vue {
   tsundokuData!: WishlistData
 
   flag: string = 'wishlist'
-  totalPageCount: number = 0
   item: SearchData = {}
   removeItem: any = {}
   dialog: boolean = false
@@ -66,7 +64,6 @@ export default class WishList extends Vue {
   }
 
   addTsundoku(item: any) {
-    this.totalPageCount = item.totalPageCount || 0
     this.item = item
     this.dialog = true
   }
@@ -97,7 +94,8 @@ export default class WishList extends Vue {
         bookStatus: 'tsundoku',
         currentPageCount: tsundokuData.currentPageCount,
         readingStartDate: tsundokuData.readingStartDate,
-        readingEndDate: tsundokuData.readingEndDate
+        readingEndExpectedDate: tsundokuData.readingEndExpectedDate,
+        'items.totalPageCount': tsundokuData.item.totalPageCount
       })
       .then(() => {
         // TODO ⬇︎発火するが、再レンダリングされないので修正する。

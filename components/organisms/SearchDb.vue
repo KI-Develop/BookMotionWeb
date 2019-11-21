@@ -146,7 +146,7 @@ export default class SearchDb extends Vue {
       bookStatus: 'tsundoku',
       bookType: 'book',
       readingStartDate: tsundokuData.readingStartDate,
-      readingEndDate: tsundokuData.readingEndDate,
+      readingEndExpectedDate: tsundokuData.readingEndDate,
       currentPageCount: tsundokuData.currentPageCount,
       items: tsundokuData.item,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()

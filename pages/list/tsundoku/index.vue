@@ -1,5 +1,5 @@
 <template>
-  <Tsundoku :tsundoku-data="items" />
+  <Tsundoku v-if="items.length" :tsundoku-data="items" />
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
@@ -19,6 +19,14 @@ export default class Index extends Vue {
   created() {
     this.getTsundokuData()
   }
+
+  mounted() {
+    this.$nuxt.$emit('updatePageName', [
+      { name: 'ホーム', path: '' },
+      { name: '積み本', path: '/list/tsundoku' }
+    ])
+  }
+
   fromTimeStampToDate(date: any): string {
     const d = new Date(date.seconds * 1000)
     const year = d.getFullYear()
@@ -47,7 +55,9 @@ export default class Index extends Vue {
 
         readingStartDate: this.fromTimeStampToDate(data.readingStartDate),
         readingEndDate: '',
-        readingEndExpectedDate: this.fromTimeStampToDate(data.readingEndDate),
+        readingEndExpectedDate: this.fromTimeStampToDate(
+          data.readingEndExpectedDate
+        ),
         currentPageCount: data.currentPageCount,
         totalPageCount: data.items.totalPageCount
       })
