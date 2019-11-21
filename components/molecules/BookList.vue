@@ -41,9 +41,25 @@
                 <Icon type="ios-book-outline" /> 総ページ数:
                 {{ item.totalPageCount }}
               </li>
-              <li @click="editTsundoku(item)">
-                <Icon type="md-create" />
-                編集
+              <li>
+                <Dropdown trigger="click">
+                  <Icon type="ios-settings" />
+                  <Icon type="ios-arrow-down" size="8" />
+                  <DropdownMenu slot="list">
+                    <div @click="editTsundoku(item)">
+                      <DropdownItem name="edit">
+                        <Icon type="md-create" />
+                        編集
+                      </DropdownItem>
+                    </div>
+                    <DropdownItem name="delete">
+                      <div @click="removeTsundoku(item)">
+                        <Icon type="ios-trash" />
+                        削除
+                      </div>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
               </li>
             </template>
             <br />
@@ -55,11 +71,9 @@
             <br />
             <p>追加日: {{ item.createdAt }}</p>
             <template slot="action">
-              <!-- TODO: 気になる本からは消えることを警告する -->
               <li @click="addTsundoku(item)">
                 <Icon type="md-add" /> 積み本に追加
               </li>
-              <li><Icon type="md-create" /> 編集</li>
               <li @click="removeWishlist(item)">
                 <Icon type="ios-remove-circle-outline" />
                 削除
@@ -126,10 +140,18 @@ export default class BookList extends Vue {
       this.$emit('wishRemoveWishlist', item)
     }
   }
+  removeTsundoku(item: any): void {
+    if (this.flag === 'tsundoku') {
+      this.$emit('tsunRemoveTsundoku', item)
+    }
+  }
   editTsundoku(item: any): void {
     if (this.flag === 'tsundoku') {
       this.$emit('tsunEditTsundoku', item)
     }
+  }
+  dropdownItemClick(name: any) {
+    console.log(name)
   }
 }
 </script>

@@ -2,12 +2,10 @@
   <Modal v-model="dialog" :closable="false" :mask-closable="false" width="360">
     <p slot="header" style="color:#f60;text-align:center">
       <Icon type="ios-information-circle" />
-      <span>気になる本を削除</span>
+      <span>{{ removeName }}を削除</span>
     </p>
     <div style="text-align:center">
-      <p>
-        本当にこの『気になる本』を削除してもよろしいですか？
-      </p>
+      <p>本当にこの『{{ removeName }}』を削除してもよろしいですか？</p>
     </div>
     <div slot="footer">
       <Button size="large" @click="cancel">
@@ -32,6 +30,13 @@ export default class RemoveModal extends Vue {
 
   @Prop({ default: false })
   dialog!: boolean
+
+  @Prop({ default: '' })
+  flag!: string
+
+  get removeName(): string {
+    return this.flag === 'tsundoku' ? '積み本' : '気になる本'
+  }
 
   remove(): void {
     this.$emit('update:dialog', false)

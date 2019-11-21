@@ -10,13 +10,21 @@
       :items="tsundokuData"
       :flag="flag"
       @tsunEditTsundoku="editTsundoku"
+      @tsunRemoveTsundoku="removeTsundoku"
     />
     <BookModal
       :dialog.sync="dialog"
       :item="item"
-      title="編集"
+      title="積み本の編集"
       ok-emit-name="tsundokuOk"
       @tsundokuOk="editOk"
+    />
+    <RemoveModal
+      :dialog.sync="removeDialog"
+      :item="removeItem"
+      flag="tsundoku"
+      remove-emit-name="tsundokuRemove"
+      @tsundokuRemove="remove"
     />
   </div>
 </template>
@@ -25,18 +33,24 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import BookList from '@/components/molecules/BookList.vue'
 import BookModal from '~/components/molecules/BookModal.vue'
+import RemoveModal from '~/components/molecules/RemoveModal.vue'
 import Refine from '@/components/molecules/Refine.vue'
 import { TsundokuData } from '@/types/book'
 import { db } from '~/plugins/firebase'
 
 @Component({
-  components: { BookList, Refine, BookModal }
+  components: { BookList, Refine, BookModal, RemoveModal }
 })
 export default class Index extends Vue {
   @Prop({ default: {} })
   tsundokuData!: TsundokuData
 
   flag: string = 'tsundoku'
+  item: any = {}
+  removeItem: any = {}
+  dialog: boolean = false
+  removeDialog: boolean = false
+
   bookCriteria: Array<string> = [
     'すべて表示',
     '論文',
@@ -47,15 +61,30 @@ export default class Index extends Vue {
     '読書開始日が早い順'
   ]
   defaultBookCriteria: string = 'すべて表示'
-  dialog: boolean = false
-  item: any = {}
 
   editTsundoku(item: any) {
     this.item = item
     this.dialog = true
   }
+
+  removeTsundoku(removeItem: any) {
+    this.removeItem = removeItem
+    this.removeDialog = true
+  }
+  remove(removeItem: any) {
+    db.collection('books')
+      .doc(removeItem.id)
+      .delete()
+      .then(() => {
+        this.removeItem = {}
+        this.$Notice.success({ title: '削除しました。' })
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
   editOk(tsundokuData: any) {
-    console.log('editOk=>', tsundokuData)
     db.collection('books')
       .doc(tsundokuData.item.id)
       .update({

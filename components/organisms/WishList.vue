@@ -21,6 +21,7 @@
     <RemoveModal
       :dialog.sync="removeDialog"
       :item="removeItem"
+      flag="wishlist"
       remove-emit-name="wishlistRemove"
       @wishlistRemove="remove"
     />
@@ -73,8 +74,6 @@ export default class WishList extends Vue {
     this.removeDialog = true
   }
   remove(removeItem: any) {
-    // TODO: firestoreから削除 && thenの後removeItemを空にする。
-    // console.log('removeItem =>', removeItem.id)
     db.collection('books')
       .doc(removeItem.id)
       .delete()
