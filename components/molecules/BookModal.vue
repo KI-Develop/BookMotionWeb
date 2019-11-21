@@ -23,18 +23,30 @@
         <DatePicker
           v-model="readingEndExpectedDate"
           type="date"
-          placeholder="読書開始日"
+          placeholder="読書終了予定日"
           style="width: 200px"
         />
-        <Icon type="ios-information-circle-outline" />
+        <Tooltip max-width="200" content="読み終えられる日時を設定しましょう。">
+          <Icon type="ios-information-circle-outline" />
+        </Tooltip>
       </FormItem>
       <FormItem label="しおり" prop="title">
         <InputNumber v-model="currentPageCount" :max="10000" :min="0" />
-        <Icon type="ios-information-circle-outline" />
+        <Tooltip
+          max-width="200"
+          content="現在読み進めてるページ数を記録しましょう。"
+        >
+          <Icon type="ios-information-circle-outline" />
+        </Tooltip>
       </FormItem>
       <FormItem label="総ページ数" prop="title">
         <InputNumber v-model="totalPageCount" :max="10000" :min="0" />
-        <Icon type="ios-information-circle-outline" />
+        <Tooltip
+          max-width="200"
+          content="総ページ数を登録することで、読了達成率が表示されます。"
+        >
+          <Icon type="ios-information-circle-outline" />
+        </Tooltip>
       </FormItem>
     </Form>
     <div slot="footer">
