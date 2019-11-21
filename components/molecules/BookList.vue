@@ -7,7 +7,7 @@
             :title="item.title"
             :description="descriptionLength(item.description)"
           />
-          <template v-if="item.authors">
+          <template v-if="item.authors[0]">
             著者:
             <span v-for="author in item.authors" :key="author.id">
               {{ author }}
@@ -42,27 +42,38 @@
                 {{ item.totalPageCount }}
               </li>
               <li>
-                <Icon type="md-create" />
-                <nuxt-link :to="'tsundoku/' + item.id">
-                  編集
-                </nuxt-link>
+                <Dropdown trigger="click">
+                  <Icon type="ios-settings" />
+                  <Icon type="ios-arrow-down" size="8" />
+                  <DropdownMenu slot="list">
+                    <div @click="editTsundoku(item)">
+                      <DropdownItem name="edit">
+                        <Icon type="md-create" />
+                        編集
+                      </DropdownItem>
+                    </div>
+                    <DropdownItem name="delete">
+                      <div @click="removeTsundoku(item)">
+                        <Icon type="ios-trash" />
+                        削除
+                      </div>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
               </li>
             </template>
             <br />
             <br />
             <p>読書開始日: {{ item.readingStartDate }}</p>
-            <p>読書終了日: {{ item.readingEndDate }}</p>
             <p>読書終了予定日: {{ item.readingEndExpectedDate }}</p>
           </template>
           <template v-if="flag === 'wishlist'">
             <br />
             <p>追加日: {{ item.createdAt }}</p>
             <template slot="action">
-              <!-- TODO: 気になる本からは消えることを警告する -->
               <li @click="addTsundoku(item)">
                 <Icon type="md-add" /> 積み本に追加
               </li>
-              <li><Icon type="md-create" /> 編集</li>
               <li @click="removeWishlist(item)">
                 <Icon type="ios-remove-circle-outline" />
                 削除
@@ -128,6 +139,19 @@ export default class BookList extends Vue {
     if (this.flag === 'wishlist') {
       this.$emit('wishRemoveWishlist', item)
     }
+  }
+  removeTsundoku(item: any): void {
+    if (this.flag === 'tsundoku') {
+      this.$emit('tsunRemoveTsundoku', item)
+    }
+  }
+  editTsundoku(item: any): void {
+    if (this.flag === 'tsundoku') {
+      this.$emit('tsunEditTsundoku', item)
+    }
+  }
+  dropdownItemClick(name: any) {
+    console.log(name)
   }
 }
 </script>

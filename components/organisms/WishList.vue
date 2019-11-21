@@ -14,13 +14,14 @@
     <BookModal
       :dialog.sync="dialog"
       :item="item"
-      :total-page-count="totalPageCount"
+      title="積み本に追加"
       ok-emit-name="wishlistOk"
       @wishlistOk="ok"
     />
     <RemoveModal
       :dialog.sync="removeDialog"
       :item="removeItem"
+      flag="wishlist"
       remove-emit-name="wishlistRemove"
       @wishlistRemove="remove"
     />
@@ -43,7 +44,6 @@ export default class WishList extends Vue {
   tsundokuData!: WishlistData
 
   flag: string = 'wishlist'
-  totalPageCount: number = 0
   item: SearchData = {}
   removeItem: any = {}
   dialog: boolean = false
@@ -65,7 +65,6 @@ export default class WishList extends Vue {
   }
 
   addTsundoku(item: any) {
-    this.totalPageCount = item.totalPageCount || 0
     this.item = item
     this.dialog = true
   }
@@ -75,8 +74,6 @@ export default class WishList extends Vue {
     this.removeDialog = true
   }
   remove(removeItem: any) {
-    // TODO: firestoreから削除 && thenの後removeItemを空にする。
-    // console.log('removeItem =>', removeItem.id)
     db.collection('books')
       .doc(removeItem.id)
       .delete()
@@ -96,7 +93,8 @@ export default class WishList extends Vue {
         bookStatus: 'tsundoku',
         currentPageCount: tsundokuData.currentPageCount,
         readingStartDate: tsundokuData.readingStartDate,
-        readingEndDate: tsundokuData.readingEndDate
+        readingEndExpectedDate: tsundokuData.readingEndExpectedDate,
+        'items.totalPageCount': tsundokuData.item.totalPageCount
       })
       .then(() => {
         // TODO ⬇︎発火するが、再レンダリングされないので修正する。
