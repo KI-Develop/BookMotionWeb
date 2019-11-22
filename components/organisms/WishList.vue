@@ -99,7 +99,11 @@ export default class WishList extends Vue {
       .then(() => {
         // TODO ⬇︎発火するが、再レンダリングされないので修正する。
         // this.$emit('getWishlistDatahoge')
-        this.$Notice.success({ title: 'このコンポーネント作れ' })
+        this.$Notice.success({ title: '積み本に追加しました。' })
+      })
+      .catch(err => {
+        console.log(err)
+        this.$Notice.error({ title: '追加に失敗しました。' })
       })
   }
 }

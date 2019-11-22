@@ -96,7 +96,11 @@ export default class Index extends Vue {
       .then(() => {
         // TODO ⬇︎発火するが、再レンダリングされないので修正する。
         // this.$emit('getWishlistDatahoge')
-        this.$Notice.success({ title: 'このコンポーネント作れ' })
+        this.$Notice.success({ title: '積み本を編集しました。' })
+      })
+      .catch(err => {
+        console.log(err)
+        this.$Notice.error({ title: '編集に失敗しました。' })
       })
   }
 }
