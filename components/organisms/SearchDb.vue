@@ -23,6 +23,7 @@
       <BookModal
         :dialog.sync="dialog"
         ok-emit-name="searchDbOk"
+        title="積み本に追加"
         :item="item"
         :total-page-count="totalPageCount"
         @searchDbOk="ok"
