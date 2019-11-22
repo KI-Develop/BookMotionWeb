@@ -106,82 +106,87 @@
     </Form>
   </Card>
 </template>
-<script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+<script>
+export default {
+  props: {
+    okEmitName: {
+      type: String,
+      default: ''
+    }
+  },
 
-@Component
-export default class ManualInput extends Vue {
-  @Prop({ default: '' })
-  okEmitName!: string
+  data: () => ({
+    formValidate: {
+      title: '',
+      author: '',
+      publisher: '',
+      bookStatus: '',
+      readingStartDate: '',
+      readingEndDate: '',
+      currentPageCount: 0,
+      totalPageCount: 0,
+      desc: ''
+    },
 
-  formValidate: any = {
-    title: '',
-    author: '',
-    publisher: '',
-    bookStatus: '',
-    readingStartDate: '',
-    readingEndDate: '',
-    currentPageCount: 0,
-    totalPageCount: 0,
-    desc: ''
-  }
+    ruleValidate: {
+      title: [
+        { required: true, message: 'タイトルは必須です。', trigger: 'blur' },
+        { type: 'string', max: 100, message: '100文字以下にしてください。' }
+      ],
+      author: [
+        { required: false, trigger: 'blur' },
+        { type: 'string', max: 100, message: '100文字以下にしてください。' }
+      ],
+      publisher: [
+        { required: false, trigger: 'change' },
+        { type: 'string', max: 100, message: '100文字以下にしてください。' }
+      ],
+      bookStatus: [
+        {
+          required: true,
+          message: '『積み本』か『気になる本』を選択してください。',
+          trigger: 'change'
+        }
+      ],
+      readingStartDate: [
+        {
+          required: true,
+          type: 'date',
+          message: '読書開始日を選択してください。',
+          trigger: 'change'
+        }
+      ],
+      readingEndDate: [
+        {
+          required: true,
+          type: 'date',
+          message: '読書終了予定日を選択してください。',
+          trigger: 'change'
+        }
+      ],
+      desc: [
+        { required: false, trigger: 'blur' },
+        {
+          type: 'string',
+          max: 200,
+          message: '200文字以下にしてください。',
+          trigger: 'blur'
+        }
+      ]
+    }
+  }),
 
-  ruleValidate: any = {
-    title: [
-      { required: true, message: 'タイトルは必須です。', trigger: 'blur' },
-      { type: 'string', max: 100, message: '100文字以下にしてください。' }
-    ],
-    author: [
-      { required: false, trigger: 'blur' },
-      { type: 'string', max: 100, message: '100文字以下にしてください。' }
-    ],
-    publisher: [
-      { required: false, trigger: 'change' },
-      { type: 'string', max: 100, message: '100文字以下にしてください。' }
-    ],
-    bookStatus: [
-      {
-        required: true,
-        message: '『積み本』か『気になる本』を選択してください。',
-        trigger: 'change'
-      }
-    ],
-    readingStartDate: [
-      {
-        required: true,
-        type: 'date',
-        message: '読書開始日を選択してください。',
-        trigger: 'change'
-      }
-    ],
-    readingEndDate: [
-      {
-        required: true,
-        type: 'date',
-        message: '読書終了予定日を選択してください。',
-        trigger: 'change'
-      }
-    ],
-    desc: [
-      { required: false, trigger: 'blur' },
-      {
-        type: 'string',
-        max: 200,
-        message: '200文字以下にしてください。',
-        trigger: 'blur'
-      }
-    ]
-  }
-
-  handleSubmit(name: string) {
-    this.$refs[name].validate(valid => {
-      if (valid) {
-        this.$Message.success('Success!')
-        this.$emit(this.okEmitName, this.formValidate)
-      } else {
-        this.$Message.error('Fail!')
-      }
-    })
+  methods: {
+    handleSubmit(name) {
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          this.$Message.success('Success!')
+          this.$emit(this.okEmitName, this.formValidate)
+        } else {
+          this.$Message.error('Fail!')
+        }
+      })
+    }
   }
 }
 </script>

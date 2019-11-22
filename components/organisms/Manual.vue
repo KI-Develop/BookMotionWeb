@@ -21,7 +21,7 @@ export default class ManualInput extends Vue {
         bookStatus: bookData.bookStatus,
         bookType: 'book',
         readingStartDate: bookData.readingStartDate,
-        readingEndDate: bookData.readingEndDate,
+        readingEndExpectedDate: bookData.readingEndDate,
         currentPageCount: bookData.currentPageCount,
         items: {
           title: bookData.title,
@@ -33,7 +33,6 @@ export default class ManualInput extends Vue {
         },
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       }
-      console.log('addTsundokuData =>', addTsundokuData)
       addTsundoku(addTsundokuData)
         .then(res => {
           // this.success('tsundoku')

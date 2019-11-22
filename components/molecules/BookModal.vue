@@ -64,101 +64,111 @@
     </div>
   </Modal>
 </template>
-<script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+<script>
+export default {
+  props: {
+    okEmitName: {
+      type: String,
+      default: ''
+    },
+    dialog: {
+      type: Boolean,
+      default: false
+    },
+    item: {
+      type: Object,
+      default: () => ({})
+    },
+    title: {
+      type: String,
+      default: ''
+    }
+  },
 
-@Component
-export default class BookModal extends Vue {
-  @Prop({ default: '' })
-  okEmitName!: string
-
-  @Prop({ default: false })
-  dialog!: boolean
-
-  @Prop({ default: {} })
-  item!: any
-
-  @Prop({ default: '' })
-  title!: string
-
-  _totalPageCount: number = 0
-
-  formValidate: any = {
-    readingStartDate: '',
-    readingEndExpectedDate: '',
-    currentPageCount: 0,
-    item: []
-  }
-
-  get readingStartDate() {
-    return this.item.readingStartDate
-  }
-  set readingStartDate(readingStartDate: string) {
-    this.formValidate.readingStartDate = readingStartDate
-  }
-
-  get readingEndExpectedDate() {
-    return this.item.readingEndExpectedDate
-  }
-  set readingEndExpectedDate(readingEndExpectedDate: string) {
-    this.formValidate.readingEndExpectedDate = readingEndExpectedDate
-  }
-
-  get currentPageCount() {
-    return this.item.currentPageCount || 0
-  }
-  set currentPageCount(currentPageCount: number) {
-    this.formValidate.currentPageCount = currentPageCount
-  }
-
-  get totalPageCount() {
-    return this.item.totalPageCount
-  }
-  set totalPageCount(totalPageCount: number) {
-    this._totalPageCount = totalPageCount
-  }
-
-  ruleValidate: any = {
-    readingStartDate: [
-      {
-        required: true,
-        type: 'date',
-        message: '読書開始日を選択してください。'
-      }
-    ],
-    readingEndExpectedDate: [
-      {
-        required: true,
-        type: 'date',
-        message: '読書終了予定日を選択してください。'
-      }
-    ]
-  }
-
-  handleSubmit(name: string): void {
-    this.$refs[name].validate(valid => {
-      if (valid) {
-        if (this.item) {
-          this.formValidate.item = this.item
+  data: () => ({
+    _totalPageCount: 0,
+    formValidate: {
+      readingStartDate: '',
+      readingEndExpectedDate: '',
+      currentPageCount: 0,
+      item: []
+    },
+    ruleValidate: {
+      readingStartDate: [
+        {
+          required: true,
+          type: 'date',
+          message: '読書開始日を選択してください。'
         }
-        this.item.totalPageCount =
-          this._totalPageCount || this.item.totalPageCount
-        this.$emit('update:dialog', false)
-        this.$emit(this.okEmitName, this.formValidate)
+      ],
+      readingEndExpectedDate: [
+        {
+          required: true,
+          type: 'date',
+          message: '読書終了予定日を選択してください。'
+        }
+      ]
+    }
+  }),
+  computed: {
+    readingStartDate: {
+      get() {
+        return this.item.readingStartDate
+      },
+      set(readingStartDate) {
+        this.formValidate.readingStartDate = readingStartDate
       }
-    })
-    this.formValidateClear()
-  }
-  cancel(): void {
-    this.$emit('update:dialog', false)
-    this.formValidateClear()
-  }
-
-  formValidateClear() {
-    this.formValidate.readingStartDate = ''
-    this.formValidate.readingEndExpectedDate = ''
-    this.formValidate.currentPageCount = 0
-    this.formValidate.item = []
+    },
+    readingEndExpectedDate: {
+      get() {
+        return this.item.readingEndExpectedDate
+      },
+      set(readingEndExpectedDate) {
+        this.formValidate.readingEndExpectedDate = readingEndExpectedDate
+      }
+    },
+    currentPageCount: {
+      get() {
+        return this.item.currentPageCount || 0
+      },
+      set(currentPageCount) {
+        this.formValidate.currentPageCount = currentPageCount
+      }
+    },
+    totalPageCount: {
+      get() {
+        return this.item.totalPageCount
+      },
+      set(totalPageCount) {
+        this._totalPageCount = totalPageCount
+      }
+    }
+  },
+  methods: {
+    handleSubmit(name) {
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          if (this.item) {
+            this.formValidate.item = this.item
+          }
+          this.item.totalPageCount =
+            this._totalPageCount || this.item.totalPageCount
+          this.$emit('update:dialog', false)
+          this.$emit(this.okEmitName, this.formValidate)
+        }
+      })
+      this.formValidateClear()
+    },
+    cancel() {
+      this.$emit('update:dialog', false)
+      this.formValidateClear()
+    },
+    formValidateClear() {
+      this.formValidate.readingStartDate = ''
+      this.formValidate.readingEndExpectedDate = ''
+      this.formValidate.currentPageCount = 0
+      this.formValidate.item = []
+    }
   }
 }
 </script>

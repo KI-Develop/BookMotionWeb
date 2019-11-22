@@ -102,50 +102,52 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+<script>
 import { auth } from '~/plugins/firebase'
+export default {
+  data: () => ({
+    isCollapsed: false,
+    title: '',
+    breadCrumbItems: {}
+  }),
 
-@Component
-export default class Default extends Vue {
-  isCollapsed: boolean = false
-  title: string = ''
-  breadCrumbItems: any = {}
-
-  get rotateIcon(): Array<string> {
-    return ['menu-icon', this.isCollapsed ? 'rotate-icon' : '']
-  }
-  get menuitemClasses(): Array<string> {
-    return ['menu-item', this.isCollapsed ? 'collapsed-menu' : '']
-  }
-
+  computed: {
+    rotateIcon: {
+      get() {
+        return ['menu-icon', this.isCollapsed ? 'rotate-icon' : '']
+      }
+    },
+    menuitemClasses: {
+      get() {
+        return ['menu-item', this.isCollapsed ? 'collapsed-menu' : '']
+      }
+    }
+  },
   created() {
     this.$nuxt.$on('updatePageName', this.setPageName)
-  }
-
-  collapsedSider() {
-    this.$refs.side1.toggleCollapse()
-  }
-
-  setPageName(pageName: any): void {
-    this.title = pageName[1].name || ''
-    this.breadCrumbItems = pageName
-  }
-
-  pageLink(path: string): void {
-    this.$router.push(path)
-  }
-
-  logout(): void {
-    auth.onAuthStateChanged(user => {
-      auth
-        .signOut()
-        .then(() => {})
-        .catch(error => {
-          console.log(error)
-        })
-    })
-    this.$store.commit('auth/logout')
+  },
+  methods: {
+    collapsedSider() {
+      this.$refs.side1.toggleCollapse()
+    },
+    setPageName(pageName) {
+      this.title = pageName[1].name || ''
+      this.breadCrumbItems = pageName
+    },
+    pageLink(path) {
+      this.$router.push(path)
+    },
+    logout() {
+      auth.onAuthStateChanged(() => {
+        auth
+          .signOut()
+          .then(() => {})
+          .catch(error => {
+            console.log(error)
+          })
+      })
+      this.$store.commit('auth/logout')
+    }
   }
 }
 </script>

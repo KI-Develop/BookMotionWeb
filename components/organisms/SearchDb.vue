@@ -146,7 +146,7 @@ export default class SearchDb extends Vue {
       bookStatus: 'tsundoku',
       bookType: 'book',
       readingStartDate: tsundokuData.readingStartDate,
-      readingEndExpectedDate: tsundokuData.readingEndDate,
+      readingEndExpectedDate: tsundokuData.readingEndExpectedDate,
       currentPageCount: tsundokuData.currentPageCount,
       items: tsundokuData.item,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -169,21 +169,7 @@ export default class SearchDb extends Vue {
       title:
         bookType === 'tsundoku'
           ? '積み本に追加しました。'
-          : '気になる本に追加しました。',
-      render: h => {
-        return h('span', [
-          h(
-            'a',
-            {
-              attrs: {
-                href: '/list/' + bookType
-              }
-            },
-            bookType === 'tsundoku' ? '積み本一覧' : '気になる本一覧'
-          ),
-          'を確認する。'
-        ])
-      }
+          : '気になる本に追加しました。'
     })
   }
 
