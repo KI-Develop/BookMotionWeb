@@ -42,12 +42,12 @@ export default {
             authProviders.Twitter,
             authProviders.Email
           ],
-          signInSuccessUrl: '/list/tsundoku'
+          signInSuccessUrl: '/home/tsundoku'
         }
 
         ui.start('#firebaseui-auth-container', config)
       } else {
-        this.$router.push('/list/tsundoku')
+        this.$router.push('/home/tsundoku')
       }
     })
   }

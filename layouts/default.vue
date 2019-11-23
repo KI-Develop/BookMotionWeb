@@ -21,10 +21,10 @@
               <Icon type="md-home" />
               <span>ホーム</span>
             </template>
-            <MenuItem name="1-1" @click.native="pageLink('/list/tsundoku')">
+            <MenuItem name="1-1" @click.native="pageLink('/home/tsundoku')">
               <span>積み本</span>
             </MenuItem>
-            <MenuItem name="1-2" @click.native="pageLink('/list/wishlist')">
+            <MenuItem name="1-2" @click.native="pageLink('/home/wishlist')">
               <span>気になる本</span>
             </MenuItem>
           </Submenu>
@@ -48,7 +48,7 @@
               <Icon type="ios-contact" />
               <span>アカウント</span>
             </template>
-            <MenuItem name="3-1">
+            <MenuItem name="3-1" @click.native="pageLink('/account/setting')">
               <span>基本設定</span>
             </MenuItem>
             <MenuItem name="3-2">

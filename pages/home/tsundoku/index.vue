@@ -23,7 +23,7 @@ export default class Index extends Vue {
   mounted() {
     this.$nuxt.$emit('updatePageName', [
       { name: 'ホーム', path: '' },
-      { name: '積み本', path: '/list/tsundoku' }
+      { name: '積み本', path: '/home/tsundoku' }
     ])
   }
 
