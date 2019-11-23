@@ -55,7 +55,6 @@ export default class Index extends Vue {
       data.createdAt = this.fromTimeStampToDate(doc.data().createdAt)
       this.items.push(data)
     })
-    console.log('wishlist index', this.items)
   }
 }
 </script>

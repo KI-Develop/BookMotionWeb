@@ -63,12 +63,16 @@
               <Icon type="ios-more" />
               その他
             </template>
-            <MenuItem name="4-1">
-              お知らせ
-            </MenuItem>
-            <MenuItem name="4-2">
-              利用規約
-            </MenuItem>
+            <a href="https://ki-develop.github.io/BookMotion_LP/terms.html">
+              <MenuItem name="4-1">
+                お知らせ
+              </MenuItem>
+            </a>
+            <a href="https://ki-develop.github.io/BookMotion_LP/terms.html">
+              <MenuItem name="4-2">
+                利用規約
+              </MenuItem>
+            </a>
           </Submenu>
         </Menu>
       </Sider>

@@ -1,21 +1,40 @@
 <template>
   <div>
     <Layout :style="{ minHeight: '100vh' }">
-      <Header :style="{ position: 'fixed', width: '100%' }">
-        <span style="font-size:25px; color:white">BookMotion</span>
+      <Header :style="{ width: '100%' }">
+        <span class="header">
+          BookMotion
+        </span>
       </Header>
       <Content
         :style="{
-          margin: '88px 20px 0',
-          minHeight: '500px'
+          margin: '20px 20px 0'
         }"
       >
         <nuxt />
       </Content>
-      <Footer>
-        2019 &copy; BookMotion
+      <Footer class="footer">
+        <a
+          href="https://ki-develop.github.io/BookMotion_LP/terms.html"
+          target="_blank"
+        >
+          利用規約
+        </a>
+        <Divider type="vertical" />
+        <span style="font-size: 11px; color: #9e9e9e">
+          2019 &copy; KI Develop.
+        </span>
       </Footer>
     </Layout>
   </div>
 </template>
-<style scoped></style>
+<style scoped>
+.header {
+  font-family: Century Gothic, sans-serif;
+  font-size: 25px;
+  color: white;
+}
+.footer {
+  text-align: center;
+}
+</style>

@@ -1,5 +1,24 @@
 <template>
-  <div id="firebaseui-auth-container" />
+  <div>
+    <Alert show-icon type="warning" style="width:350px; margin:0 auto">
+      ご登録の前に
+      <a href="https://ki-develop.github.io/BookMotion_LP/terms.html">
+        利用規約
+      </a>
+      をお読みください
+    </Alert>
+    <br />
+    <Alert show-icon closable style="width:350px; margin:0 auto">
+      テスト版ではgoogleログインとメールでのログインのみ可能です。
+    </Alert>
+    <br />
+    <Card style="width:350px; margin: 0 auto">
+      <p slot="title">
+        ログイン
+      </p>
+      <div id="firebaseui-auth-container" />
+    </Card>
+  </div>
 </template>
 
 <script>
@@ -20,15 +39,15 @@ export default {
           signInOptions: [
             authProviders.Google,
             authProviders.Facebook,
-            authProviders.Twitter
+            authProviders.Twitter,
+            authProviders.Email
           ],
           signInSuccessUrl: '/list/tsundoku'
         }
 
         ui.start('#firebaseui-auth-container', config)
       } else {
-        console.log('login else')
-        // auth.signOut().then(() => {})
+        this.$router.push('/list/tsundoku')
       }
     })
   }
