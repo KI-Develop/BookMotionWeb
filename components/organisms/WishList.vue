@@ -57,13 +57,6 @@ export default class WishList extends Vue {
   ]
   defaultBookCriteria: string = 'すべて表示'
 
-  mounted() {
-    this.$nuxt.$emit('updatePageName', [
-      { name: 'ホーム', path: '' },
-      { name: '気になる本', path: '/list/wishlist' }
-    ])
-  }
-
   addTsundoku(item: any) {
     this.item = item
     this.dialog = true

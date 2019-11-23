@@ -32,7 +32,7 @@ export default class Index extends Vue {
   mounted() {
     this.$nuxt.$emit('updatePageName', [
       { name: 'ホーム', path: '' },
-      { name: '気になる本', path: '/list/wishlist' }
+      { name: '気になる本', path: '/home/wishlist' }
     ])
   }
 
@@ -55,7 +55,6 @@ export default class Index extends Vue {
       data.createdAt = this.fromTimeStampToDate(doc.data().createdAt)
       this.items.push(data)
     })
-    console.log('wishlist index', this.items)
   }
 }
 </script>
