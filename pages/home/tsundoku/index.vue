@@ -1,5 +1,39 @@
 <template>
-  <Tsundoku v-if="items.length" :tsundoku-data="items" />
+  <div>
+    <Row>
+      <Tsundoku v-if="items.length" :tsundoku-data="items" />
+      <i-col>
+        <Spin v-if="spinShow" size="large" fix>
+          <Icon type="ios-loading" size="18" class="demo-spin-icon-load" />
+          <div>Loading...</div>
+        </Spin>
+      </i-col>
+      <template v-if="!items.length && spinShow == false">
+        <Alert show-icon closable style="width:350px; margin:0 auto">
+          積み本はありません。
+          <span slot="desc">
+            積みたい本を
+            <nuxt-link to="/register/searchdb"> データベース </nuxt-link>
+            から登録する
+          </span>
+        </Alert>
+        <br />
+        <Alert
+          type="warning"
+          show-icon
+          closable
+          style="width:350px; margin:0 auto"
+        >
+          Sorry ...
+          <span slot="desc">
+            ページを再リロードすると表示されないエラーが起きています。
+            <br />
+            全力でバグを潰しますので少々お待ちください。
+          </span>
+        </Alert>
+      </template>
+    </Row>
+  </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
@@ -15,6 +49,7 @@ import { db } from '~/plugins/firebase'
 export default class Index extends Vue {
   items: TsundokuData[] = []
   achievementRate: number = 0
+  spinShow: boolean = false
 
   created() {
     this.getTsundokuData()
@@ -36,6 +71,7 @@ export default class Index extends Vue {
   }
 
   async getTsundokuData() {
+    this.spinShow = true
     const snapShot = await db
       .collection('books')
       .where('userId', '==', this.$store.state.auth.uid)
@@ -62,6 +98,12 @@ export default class Index extends Vue {
         totalPageCount: data.items.totalPageCount
       })
     })
+    this.spinShow = false
   }
 }
 </script>
+<style scoped>
+.demo-spin-icon-load {
+  animation: ani-demo-spin 1s linear infinite;
+}
+</style>
