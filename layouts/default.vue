@@ -60,7 +60,7 @@
               <Icon type="ios-more" />
               その他
             </template>
-            <a href="https://ki-develop.github.io/BookMotion_LP/terms.html">
+            <a href="https://ki-develop.github.io/BookMotion_LP/index.html">
               <MenuItem name="4-1">
                 お知らせ
               </MenuItem>
