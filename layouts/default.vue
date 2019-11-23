@@ -51,9 +51,6 @@
             <MenuItem name="3-1" @click.native="pageLink('/account/setting')">
               <span>基本設定</span>
             </MenuItem>
-            <MenuItem name="3-2">
-              <span>木の成長</span>
-            </MenuItem>
             <MenuItem name="3-3" @click.native="logout">
               <span>ログアウト</span>
             </MenuItem>
