@@ -39,7 +39,6 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import _ from 'lodash'
 import * as firebase from 'firebase/app'
 import { SearchData, AddWishlistData, AddTsundokuData } from '~/types/book'
 import { googleBooksApi, addTsundoku, addWishlist } from '~/api/index'
@@ -66,11 +65,7 @@ export default class SearchDb extends Vue {
   onKeywordChanged(keyword: string) {
     this.keyword = keyword
     this.spinShow = true
-    this.debouncedGetAnswer()
-  }
-
-  created() {
-    this.debouncedGetAnswer = _.debounce(this.getAnswer, 1500)
+    this.getAnswer()
   }
 
   mounted() {
@@ -88,6 +83,8 @@ export default class SearchDb extends Vue {
       this.spinShow = false
       return
     }
+
+    this.items = []
 
     googleBooksApi(this.keyword)
       .then(res => {
@@ -116,7 +113,6 @@ export default class SearchDb extends Vue {
   }
 
   addTsundoku(item: SearchData) {
-    // TODO: dbに追加
     this.totalPageCount = item.totalPageCount || 0
     this.item = item
     this.dialog = true
