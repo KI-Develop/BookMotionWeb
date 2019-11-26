@@ -1,11 +1,11 @@
 <template>
   <i-input v-model="keyword" :placeholder="select">
     <span slot="prepend">{{ option }}</span>
-    <Button slot="append" :icon="buttonIcon" />
+    <Button slot="append" :icon="buttonIcon" @click="onKeywordChanged" />
   </i-input>
 </template>
 <script lang="ts">
-import { Component, Watch, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component
 export default class Search extends Vue {
@@ -23,7 +23,6 @@ export default class Search extends Vue {
 
   keyword: string = ''
 
-  @Watch('keyword')
   onKeywordChanged() {
     this.$emit(this.emitName, this.keyword)
   }
