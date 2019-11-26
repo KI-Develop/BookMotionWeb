@@ -92,3 +92,5 @@ sw.*
 *.config
 
 *.firebaserc
+
+.firebase
