@@ -1,5 +1,5 @@
 <template>
-  <i-input v-model="keyword" :placeholder="select">
+  <i-input v-model="keyword" :placeholder="select" @on-enter="onKeywordChanged">
     <span slot="prepend">{{ option }}</span>
     <Button slot="append" :icon="buttonIcon" @click="onKeywordChanged" />
   </i-input>
