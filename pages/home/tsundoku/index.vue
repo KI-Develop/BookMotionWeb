@@ -1,7 +1,11 @@
 <template>
   <div>
     <Row>
-      <Tsundoku v-if="items.length" :tsundoku-data="items" />
+      <Tsundoku
+        v-if="items.length"
+        :tsundoku-data="items"
+        @updateTsundoku="getBookData"
+      />
       <i-col>
         <Spin v-if="spinShow" size="large" fix>
           <Icon type="ios-loading" size="18" class="demo-spin-icon-load" />
@@ -39,7 +43,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Tsundoku from '~/components/organisms/Tsundoku.vue'
 import { TsundokuData } from '@/types/book'
-import { db } from '~/plugins/firebase'
+import { getTsundokuData, fromTimeStampToDate } from '~/api/index'
 
 @Component({
   components: {
@@ -52,7 +56,11 @@ export default class Index extends Vue {
   spinShow: boolean = false
 
   created() {
-    this.getTsundokuData()
+    this.getBookData()
+    // DOMが生成された後にfirestore叩くと描画された
+    // this.spinShow = true
+    // setTimeout(this.getBookData, 1000)
+    // console.log(this.items)
   }
 
   mounted() {
@@ -62,42 +70,36 @@ export default class Index extends Vue {
     ])
   }
 
-  fromTimeStampToDate(date: any): string {
-    const d = new Date(date.seconds * 1000)
-    const year = d.getFullYear()
-    const month = `0${d.getMonth() + 1}`.slice(-2)
-    const day = `0${d.getDate()}`.slice(-2)
-    return `${year}-${month}-${day}`
-  }
-
-  async getTsundokuData() {
+  async getBookData() {
     this.spinShow = true
-    const snapShot = await db
-      .collection('books')
-      .where('userId', '==', this.$store.state.auth.uid)
-      .where('bookStatus', '==', 'tsundoku')
-      .get()
-    snapShot.forEach(doc => {
-      const data = doc.data()
+    this.items = []
 
-      this.items.push({
-        id: doc.id,
-        title: data.items.title,
-        authors: data.items.authors,
-        description: data.items.description,
-        bookImage: data.items.bookImage,
-        publishedDate: data.items.publishedDate,
-        publisher: data.items.publisher,
+    await getTsundokuData(this.$store.state.auth.uid)
+      .then(res => {
+        res.docs.map(snapShot => {
+          const data = snapShot.data()
+          this.items.push({
+            id: snapShot.id,
+            title: data.items.title,
+            authors: data.items.authors,
+            description: data.items.description,
+            bookImage: data.items.bookImage,
+            publishedDate: data.items.publishedDate,
+            publisher: data.items.publisher,
 
-        readingStartDate: this.fromTimeStampToDate(data.readingStartDate),
-        readingEndDate: '',
-        readingEndExpectedDate: this.fromTimeStampToDate(
-          data.readingEndExpectedDate
-        ),
-        currentPageCount: data.currentPageCount,
-        totalPageCount: data.items.totalPageCount
+            readingStartDate: fromTimeStampToDate(data.readingStartDate),
+            readingEndExpectedDate: fromTimeStampToDate(
+              data.readingEndExpectedDate
+            ),
+            currentPageCount: data.currentPageCount,
+            totalPageCount: data.items.totalPageCount
+          })
+        })
       })
-    })
+      .catch(err => {
+        console.log(err)
+      })
+
     this.spinShow = false
   }
 }
