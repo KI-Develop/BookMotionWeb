@@ -6,10 +6,12 @@
     />
     <br /><br />
     <BookList
-      :items="tsundokuData"
+      :items="items"
       :flag="flag"
+      :loading-flag="loadingFlag"
       @wishAddTsundoku="addTsundoku"
       @wishRemoveWishlist="removeWishlist"
+      @wishLoadMore="loadMore"
     />
     <BookModal
       :dialog.sync="dialog"
@@ -35,19 +37,21 @@ import RemoveModal from '~/components/molecules/RemoveModal.vue'
 import Refine from '@/components/molecules/Refine.vue'
 import { WishlistData, SearchData } from '@/types/book'
 import { db } from '~/plugins/firebase'
+import { getMoreWishlistData } from '~/api/index'
 
 @Component({
   components: { BookList, Refine, BookModal, RemoveModal }
 })
 export default class WishList extends Vue {
   @Prop({ default: {} })
-  tsundokuData!: WishlistData
+  items!: WishlistData[]
 
   flag: string = 'wishlist'
   item: SearchData = {}
   removeItem: any = {}
   dialog: boolean = false
   removeDialog: boolean = false
+  loadingFlag: boolean = false
 
   bookCriteria: Array<string> = [
     'すべて表示',
@@ -98,6 +102,24 @@ export default class WishList extends Vue {
         console.log(err)
         this.$Notice.error({ title: '追加に失敗しました。' })
       })
+  }
+
+  async loadMore(lastBookData: any) {
+    this.loadingFlag = true
+    await getMoreWishlistData(
+      this.$store.state.auth.uid,
+      lastBookData.createdAt
+    ).then(res => {
+      res.docs.map(snapShot => {
+        if (snapShot.exists) {
+          const data = snapShot.data().items
+          data.id = snapShot.id
+          data.createdAt = snapShot.data().createdAt
+          this.items.push(data)
+        }
+      })
+      this.loadingFlag = false
+    })
   }
 }
 </script>

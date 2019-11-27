@@ -16,6 +16,7 @@ interface AddBookData {
 }
 
 export interface TsundokuData extends BookData {
+  createdAt?: Date
   readingStartDate?: string
   readingEndDate?: string
   readingEndExpectedDate?: string

@@ -17,7 +17,7 @@
             <p>出版社: {{ item.publisher }}</p>
           </template>
           <template v-if="item.publishedDate">
-            <p>出版日: {{ item.publishedDate }}</p>
+            <p>出版: {{ item.publishedDate }}</p>
           </template>
           <template v-if="flag === 'tsundoku'">
             <template slot="action">
@@ -64,12 +64,15 @@
             </template>
             <br />
             <br />
-            <p>読書開始日: {{ item.readingStartDate }}</p>
-            <p>読書終了予定日: {{ item.readingEndExpectedDate }}</p>
+            <p>読書開始日: {{ _fromTimeStampToDate(item.readingStartDate) }}</p>
+            <p>
+              読書終了予定日:
+              {{ _fromTimeStampToDate(item.readingEndExpectedDate) }}
+            </p>
           </template>
           <template v-if="flag === 'wishlist'">
             <br />
-            <p>追加日: {{ item.createdAt }}</p>
+            <p>追加日: {{ _fromTimeStampToDate(item.createdAt) }}</p>
             <template slot="action">
               <li @click="addTsundoku(item)">
                 <Icon type="md-add" /> 積み本に追加
@@ -96,11 +99,23 @@
         </ListItem>
       </List>
     </Card>
+    <br />
+    <Button
+      v-if="items.length % 10 === 0"
+      type="primary"
+      long
+      :loading="loadingFlag"
+      @click="loadMore"
+    >
+      <span v-if="!loadingFlag">さらに読み込む</span>
+      <span v-else>Loading...</span>
+    </Button>
   </div>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { BookData, SearchData } from '@/types/book'
+import { fromTimeStampToDate } from '~/api/index'
 
 @Component
 export default class BookList extends Vue {
@@ -108,6 +123,12 @@ export default class BookList extends Vue {
   items!: BookData[]
   @Prop({ default: '' })
   flag!: string
+  @Prop({ default: false })
+  loadingFlag!: boolean
+
+  _fromTimeStampToDate(date: any) {
+    return fromTimeStampToDate(date)
+  }
 
   achievementRate(currentPageCount: number, totalPageCount: number) {
     return Math.round((currentPageCount / totalPageCount) * 100)
@@ -152,6 +173,15 @@ export default class BookList extends Vue {
   }
   dropdownItemClick(name: any) {
     console.log(name)
+  }
+
+  loadMore() {
+    if (this.flag === 'tsundoku') {
+      this.$emit('tsunLoadMore', this.items.slice(-1)[0])
+    }
+    if (this.flag === 'wishlist') {
+      this.$emit('wishLoadMore', this.items.slice(-1)[0])
+    }
   }
 }
 </script>

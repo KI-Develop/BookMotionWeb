@@ -24,8 +24,10 @@ export async function addWishlist(tsundokuData: AddWishlistData): Promise<any> {
 export async function getTsundokuData(userId: string) {
   const snapShot = await db
     .collection('books')
+    .orderBy('createdAt', 'desc')
     .where('userId', '==', userId)
     .where('bookStatus', '==', 'tsundoku')
+    .limit(10)
     .get()
   return snapShot
 }
@@ -33,8 +35,34 @@ export async function getTsundokuData(userId: string) {
 export async function getWishlistData(userId: string) {
   const snapShot = await db
     .collection('books')
+    .orderBy('createdAt', 'desc')
     .where('userId', '==', userId)
     .where('bookStatus', '==', 'wishlist')
+    .limit(10)
+    .get()
+  return snapShot
+}
+
+export async function getMoreTsundokuData(userId: string, lastDate: any) {
+  const snapShot = await db
+    .collection('books')
+    .orderBy('createdAt', 'desc')
+    .where('userId', '==', userId)
+    .where('bookStatus', '==', 'tsundoku')
+    .startAfter(lastDate)
+    .limit(10)
+    .get()
+  return snapShot
+}
+
+export async function getMoreWishlistData(userId: string, lastDate: any) {
+  const snapShot = await db
+    .collection('books')
+    .orderBy('createdAt', 'desc')
+    .where('userId', '==', userId)
+    .where('bookStatus', '==', 'wishlist')
+    .startAfter(lastDate)
+    .limit(10)
     .get()
   return snapShot
 }
