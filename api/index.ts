@@ -20,3 +20,12 @@ export async function addWishlist(tsundokuData: AddWishlistData): Promise<any> {
   const res = await db.collection('books').add(tsundokuData)
   return res
 }
+
+export async function getTsundokuData(userId: string) {
+  const snapShot = await db
+    .collection('books')
+    .where('userId', '==', userId)
+    .where('bookStatus', '==', 'tsundoku')
+    .get()
+  return snapShot
+}

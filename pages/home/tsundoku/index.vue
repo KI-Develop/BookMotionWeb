@@ -31,6 +31,9 @@
             全力でバグを潰しますので少々お待ちください。
           </span>
         </Alert>
+        <button @click="getBookData">
+          firestore発火ボタン
+        </button>
       </template>
     </Row>
   </div>
@@ -39,7 +42,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Tsundoku from '~/components/organisms/Tsundoku.vue'
 import { TsundokuData } from '@/types/book'
-import { db } from '~/plugins/firebase'
+import { getTsundokuData } from '~/api/index'
 
 @Component({
   components: {
@@ -52,7 +55,11 @@ export default class Index extends Vue {
   spinShow: boolean = false
 
   created() {
-    this.getTsundokuData()
+    this.getBookData()
+    // DOMが生成された後にfirestore叩くと描画された
+    // this.spinShow = true
+    // setTimeout(this.getBookData, 1000)
+    // console.log(this.items)
   }
 
   mounted() {
@@ -70,34 +77,36 @@ export default class Index extends Vue {
     return `${year}-${month}-${day}`
   }
 
-  async getTsundokuData() {
+  getBookData() {
     this.spinShow = true
-    const snapShot = await db
-      .collection('books')
-      .where('userId', '==', this.$store.state.auth.uid)
-      .where('bookStatus', '==', 'tsundoku')
-      .get()
-    snapShot.forEach(doc => {
-      const data = doc.data()
 
-      this.items.push({
-        id: doc.id,
-        title: data.items.title,
-        authors: data.items.authors,
-        description: data.items.description,
-        bookImage: data.items.bookImage,
-        publishedDate: data.items.publishedDate,
-        publisher: data.items.publisher,
+    getTsundokuData(this.$store.state.auth.uid)
+      .then(res => {
+        res.docs.map(snapShot => {
+          const data = snapShot.data()
+          this.items.push({
+            id: snapShot.id,
+            title: data.items.title,
+            authors: data.items.authors,
+            description: data.items.description,
+            bookImage: data.items.bookImage,
+            publishedDate: data.items.publishedDate,
+            publisher: data.items.publisher,
 
-        readingStartDate: this.fromTimeStampToDate(data.readingStartDate),
-        readingEndDate: '',
-        readingEndExpectedDate: this.fromTimeStampToDate(
-          data.readingEndExpectedDate
-        ),
-        currentPageCount: data.currentPageCount,
-        totalPageCount: data.items.totalPageCount
+            readingStartDate: this.fromTimeStampToDate(data.readingStartDate),
+            readingEndDate: '',
+            readingEndExpectedDate: this.fromTimeStampToDate(
+              data.readingEndExpectedDate
+            ),
+            currentPageCount: data.currentPageCount,
+            totalPageCount: data.items.totalPageCount
+          })
+        })
       })
-    })
+      .catch(err => {
+        console.log(err)
+      })
+
     this.spinShow = false
   }
 }
