@@ -13,8 +13,8 @@ import Manual from '~/components/organisms/Manual.vue'
 export default class index extends Vue {
   mounted() {
     this.$nuxt.$emit('updatePageName', [
-      { name: '本の登録', path: '' },
-      { name: '手動入力', path: '/register/manual' }
+      { name: '本の登録', path: '', openName: '2' },
+      { name: '手動入力', path: '/register/manual', activeName: '2-2' }
     ])
   }
 }
