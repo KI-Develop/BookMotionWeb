@@ -101,7 +101,7 @@
     </Card>
     <br />
     <Button
-      v-if="items.length % 10 === 0"
+      v-if="items.length % 10 === 0 && flag !== 'search'"
       type="primary"
       long
       :loading="loadingFlag"
