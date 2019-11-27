@@ -3,7 +3,7 @@
     <Row>
       <WishList
         v-if="items.length"
-        :tsundoku-data="items"
+        :items="items"
         @updateWishlist="getBookData"
       />
     </Row>
@@ -44,7 +44,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import WishList from '@/components/organisms/WishList.vue'
 import { WishlistData } from '@/types/book'
-import { getWishlistData, fromTimeStampToDate } from '~/api/index'
+import { getWishlistData } from '~/api/index'
 
 @Component({
   components: {
@@ -76,7 +76,7 @@ export default class Index extends Vue {
         res.docs.map(snapShot => {
           const data = snapShot.data().items
           data.id = snapShot.id
-          data.createdAt = fromTimeStampToDate(snapShot.data().createdAt)
+          data.createdAt = snapShot.data().createdAt
           this.items.push(data)
         })
       })

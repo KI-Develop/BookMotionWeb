@@ -43,7 +43,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Tsundoku from '~/components/organisms/Tsundoku.vue'
 import { TsundokuData } from '@/types/book'
-import { getTsundokuData, fromTimeStampToDate } from '~/api/index'
+import { getTsundokuData } from '~/api/index'
 
 @Component({
   components: {
@@ -57,10 +57,6 @@ export default class Index extends Vue {
 
   created() {
     this.getBookData()
-    // DOMが生成された後にfirestore叩くと描画された
-    // this.spinShow = true
-    // setTimeout(this.getBookData, 1000)
-    // console.log(this.items)
   }
 
   mounted() {
@@ -86,13 +82,11 @@ export default class Index extends Vue {
             bookImage: data.items.bookImage,
             publishedDate: data.items.publishedDate,
             publisher: data.items.publisher,
-
-            readingStartDate: fromTimeStampToDate(data.readingStartDate),
-            readingEndExpectedDate: fromTimeStampToDate(
-              data.readingEndExpectedDate
-            ),
+            readingStartDate: data.readingStartDate,
+            readingEndExpectedDate: data.readingEndExpectedDate,
             currentPageCount: data.currentPageCount,
-            totalPageCount: data.items.totalPageCount
+            totalPageCount: data.items.totalPageCount,
+            createdAt: data.createdAt
           })
         })
       })
