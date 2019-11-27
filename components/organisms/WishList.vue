@@ -72,6 +72,7 @@ export default class WishList extends Vue {
       .delete()
       .then(() => {
         this.removeItem = {}
+        this.$emit('updateWishlist')
         this.$Notice.success({ title: '削除しました。' })
       })
       .catch(error => {
@@ -90,8 +91,7 @@ export default class WishList extends Vue {
         'items.totalPageCount': tsundokuData.item.totalPageCount
       })
       .then(() => {
-        // TODO ⬇︎発火するが、再レンダリングされないので修正する。
-        // this.$emit('getWishlistDatahoge')
+        this.$emit('updateWishlist')
         this.$Notice.success({ title: '積み本に追加しました。' })
       })
       .catch(err => {

@@ -4,7 +4,7 @@
       <WishList
         v-if="items.length"
         :tsundoku-data="items"
-        @getWishlistDatahoge="getBookData"
+        @updateWishlist="getBookData"
       />
     </Row>
     <i-col>
@@ -44,7 +44,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import WishList from '@/components/organisms/WishList.vue'
 import { WishlistData } from '@/types/book'
-import { db } from '~/plugins/firebase'
+import { getWishlistData, fromTimeStampToDate } from '~/api/index'
 
 @Component({
   components: {
@@ -67,26 +67,23 @@ export default class Index extends Vue {
     ])
   }
 
-  fromTimeStampToDate(date: any): string {
-    const d = new Date(date.seconds * 1000)
-    const year = d.getFullYear()
-    const month = `0${d.getMonth() + 1}`.slice(-2)
-    const day = `0${d.getDate()}`.slice(-2)
-    return `${year}-${month}-${day}`
-  }
   async getBookData() {
     this.spinShow = true
-    const snapShot = await db
-      .collection('books')
-      .where('userId', '==', this.$store.state.auth.uid)
-      .where('bookStatus', '==', 'wishlist')
-      .get()
-    snapShot.forEach(doc => {
-      const data = doc.data().items
-      data.id = doc.id
-      data.createdAt = this.fromTimeStampToDate(doc.data().createdAt)
-      this.items.push(data)
-    })
+    this.items = []
+
+    await getWishlistData(this.$store.state.auth.uid)
+      .then(res => {
+        res.docs.map(snapShot => {
+          const data = snapShot.data().items
+          data.id = snapShot.id
+          data.createdAt = fromTimeStampToDate(snapShot.data().createdAt)
+          this.items.push(data)
+        })
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
     this.spinShow = false
   }
 }

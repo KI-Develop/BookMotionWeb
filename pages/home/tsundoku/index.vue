@@ -1,7 +1,11 @@
 <template>
   <div>
     <Row>
-      <Tsundoku v-if="items.length" :tsundoku-data="items" />
+      <Tsundoku
+        v-if="items.length"
+        :tsundoku-data="items"
+        @updateTsundoku="getBookData"
+      />
       <i-col>
         <Spin v-if="spinShow" size="large" fix>
           <Icon type="ios-loading" size="18" class="demo-spin-icon-load" />
@@ -31,9 +35,6 @@
             全力でバグを潰しますので少々お待ちください。
           </span>
         </Alert>
-        <button @click="getBookData">
-          firestore発火ボタン
-        </button>
       </template>
     </Row>
   </div>
@@ -42,7 +43,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Tsundoku from '~/components/organisms/Tsundoku.vue'
 import { TsundokuData } from '@/types/book'
-import { getTsundokuData } from '~/api/index'
+import { getTsundokuData, fromTimeStampToDate } from '~/api/index'
 
 @Component({
   components: {
@@ -69,18 +70,11 @@ export default class Index extends Vue {
     ])
   }
 
-  fromTimeStampToDate(date: any): string {
-    const d = new Date(date.seconds * 1000)
-    const year = d.getFullYear()
-    const month = `0${d.getMonth() + 1}`.slice(-2)
-    const day = `0${d.getDate()}`.slice(-2)
-    return `${year}-${month}-${day}`
-  }
-
-  getBookData() {
+  async getBookData() {
     this.spinShow = true
+    this.items = []
 
-    getTsundokuData(this.$store.state.auth.uid)
+    await getTsundokuData(this.$store.state.auth.uid)
       .then(res => {
         res.docs.map(snapShot => {
           const data = snapShot.data()
@@ -93,9 +87,8 @@ export default class Index extends Vue {
             publishedDate: data.items.publishedDate,
             publisher: data.items.publisher,
 
-            readingStartDate: this.fromTimeStampToDate(data.readingStartDate),
-            readingEndDate: '',
-            readingEndExpectedDate: this.fromTimeStampToDate(
+            readingStartDate: fromTimeStampToDate(data.readingStartDate),
+            readingEndExpectedDate: fromTimeStampToDate(
               data.readingEndExpectedDate
             ),
             currentPageCount: data.currentPageCount,
