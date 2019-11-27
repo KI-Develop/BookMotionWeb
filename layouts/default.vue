@@ -10,10 +10,10 @@
         breakpoint="md"
       >
         <Menu
-          active-name="1-2"
+          :active-name="activeName"
           theme="dark"
           width="auto"
-          :open-names="['1']"
+          :open-names="[openName]"
           :class="menuitemClasses"
         >
           <Submenu name="1">
@@ -109,7 +109,9 @@ export default {
   data: () => ({
     isCollapsed: false,
     title: '',
-    breadCrumbItems: {}
+    breadCrumbItems: {},
+    openName: '',
+    activeName: ''
   }),
 
   computed: {
@@ -134,6 +136,8 @@ export default {
     setPageName(pageName) {
       this.title = pageName[1].name || ''
       this.breadCrumbItems = pageName
+      this.openName = pageName[0].openName
+      this.activeName = pageName[1].activeName
     },
     pageLink(path) {
       this.$router.push(path)
