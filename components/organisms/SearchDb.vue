@@ -68,13 +68,6 @@ export default class SearchDb extends Vue {
     this.getAnswer()
   }
 
-  mounted() {
-    this.$nuxt.$emit('updatePageName', [
-      { name: '本の登録', path: '' },
-      { name: 'データベース検索', path: '/register/searchdb' }
-    ])
-  }
-
   debouncedGetAnswer() {}
 
   getAnswer() {

@@ -24,8 +24,8 @@ import { Component, Vue } from 'vue-property-decorator'
 export default class Index extends Vue {
   mounted() {
     this.$nuxt.$emit('updatePageName', [
-      { name: 'アカウント', path: '' },
-      { name: '基本設定', path: '/account/setting' }
+      { name: 'アカウント', path: '', openName: '3' },
+      { name: '基本設定', path: '/account/setting', activeName: '3-1' }
     ])
   }
 }
