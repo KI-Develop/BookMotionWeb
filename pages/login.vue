@@ -1,11 +1,15 @@
 <template>
   <div>
     <Alert show-icon type="warning" style="width:350px; margin:0 auto">
-      ご登録の前に
+      ご利用に際しては、
       <a href="https://ki-develop.github.io/BookMotion_LP/terms.html">
         利用規約
       </a>
-      をお読みください
+      及び
+      <a href="https://ki-develop.github.io/BookMotion_LP/privacy.html">
+        プライバシーポリシー
+      </a>
+      に同意したことになります。
     </Alert>
     <br />
     <Alert show-icon closable style="width:350px; margin:0 auto">

@@ -14,11 +14,12 @@
         <nuxt />
       </Content>
       <Footer class="footer">
-        <a
-          href="https://ki-develop.github.io/BookMotion_LP/terms.html"
-          target="_blank"
-        >
+        <a href="https://ki-develop.github.io/BookMotion_LP/terms.html">
           利用規約
+        </a>
+        <Divider type="vertical" />
+        <a href="https://ki-develop.github.io/BookMotion_LP/privacy.html">
+          プライバシーポリシー
         </a>
         <Divider type="vertical" />
         <span style="font-size: 11px; color: #9e9e9e">
