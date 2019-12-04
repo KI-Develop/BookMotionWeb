@@ -65,6 +65,7 @@
   </Modal>
 </template>
 <script>
+import { fromTimeStampToDate } from '~/api/index'
 export default {
   props: {
     okEmitName: {
@@ -113,7 +114,10 @@ export default {
   computed: {
     readingStartDate: {
       get() {
-        return this.item.readingStartDate
+        if (this.item.readingStartDate) {
+          return fromTimeStampToDate(this.item.readingStartDate)
+        }
+        return ''
       },
       set(readingStartDate) {
         this.formValidate.readingStartDate = readingStartDate
@@ -121,7 +125,10 @@ export default {
     },
     readingEndExpectedDate: {
       get() {
-        return this.item.readingEndExpectedDate
+        if (this.item.readingEndExpectedDate) {
+          return fromTimeStampToDate(this.item.readingEndExpectedDate)
+        }
+        return ''
       },
       set(readingEndExpectedDate) {
         this.formValidate.readingEndExpectedDate = readingEndExpectedDate
@@ -129,6 +136,8 @@ export default {
     },
     currentPageCount: {
       get() {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.formValidate.currentPageCount = this.item.currentPageCount || 0
         return this.item.currentPageCount || 0
       },
       set(currentPageCount) {
@@ -137,10 +146,12 @@ export default {
     },
     totalPageCount: {
       get() {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.item.totalPageCount = this.item.totalPageCount
         return this.item.totalPageCount
       },
       set(totalPageCount) {
-        this._totalPageCount = totalPageCount
+        this.item.totalPageCount = totalPageCount
       }
     }
   },
@@ -151,8 +162,6 @@ export default {
           if (this.item) {
             this.formValidate.item = this.item
           }
-          this.item.totalPageCount =
-            this._totalPageCount || this.item.totalPageCount
           this.$emit('update:dialog', false)
           this.$emit(this.okEmitName, this.formValidate)
         }
