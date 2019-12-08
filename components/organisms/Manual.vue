@@ -44,7 +44,6 @@ export default class ManualInput extends Vue {
         })
     }
     if (bookData.bookStatus === 'wishlist') {
-      console.log('wishlist =>', bookData)
       const addWishlistData: AddWishlistData = {
         userId: this.$store.state.auth.uid,
         bookStatus: bookData.bookStatus,
@@ -67,7 +66,6 @@ export default class ManualInput extends Vue {
           console.log(err)
           // this.error()
         })
-      console.log('addWishlistData =>', addWishlistData)
     }
   }
 }
