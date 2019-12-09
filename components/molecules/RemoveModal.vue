@@ -32,11 +32,7 @@ export default class RemoveModal extends Vue {
   dialog!: boolean
 
   @Prop({ default: '' })
-  flag!: string
-
-  get removeName(): string {
-    return this.flag === 'tsundoku' ? '積み本' : '気になる本'
-  }
+  removeName!: string
 
   remove(): void {
     this.$emit('update:dialog', false)

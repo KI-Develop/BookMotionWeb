@@ -23,7 +23,7 @@
     <RemoveModal
       :dialog.sync="removeDialog"
       :item="removeItem"
-      flag="wishlist"
+      remove-name="気になる本"
       remove-emit-name="wishlistRemove"
       @wishlistRemove="remove"
     />
