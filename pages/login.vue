@@ -12,9 +12,6 @@
       に同意したことになります。
     </Alert>
     <br />
-    <Alert show-icon closable style="width:350px; margin:0 auto">
-      テスト版ではgoogleログインとメールでのログインのみ可能です。
-    </Alert>
     <br />
     <Card style="width:350px; margin: 0 auto">
       <p slot="title">
@@ -42,7 +39,6 @@ export default {
         const config = {
           signInOptions: [
             authProviders.Google,
-            authProviders.Facebook,
             authProviders.Twitter,
             authProviders.Email
           ],
