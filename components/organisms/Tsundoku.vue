@@ -24,7 +24,7 @@
     <RemoveModal
       :dialog.sync="removeDialog"
       :item="removeItem"
-      flag="tsundoku"
+      remove-name="積み本"
       remove-emit-name="tsundokuRemove"
       @tsundokuRemove="remove"
     />
