@@ -67,6 +67,22 @@ export async function getMoreWishlistData(userId: string, lastDate: any) {
   return snapShot
 }
 
+export async function getBookCollection(userId: string) {
+  const snapShot = await db
+    .collection('books')
+    .where('userId', '==', userId)
+    .get()
+  return snapShot
+}
+
+export async function deleteBookDocument(docId: string) {
+  const snapShot = await db
+    .collection('books')
+    .doc(docId)
+    .delete()
+  return snapShot
+}
+
 export function fromTimeStampToDate(date: any): string {
   const d = new Date(date.seconds * 1000)
   const year = d.getFullYear()

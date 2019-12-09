@@ -37,6 +37,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import RemoveModal from '~/components/molecules/RemoveModal.vue'
+import { auth } from '~/plugins/firebase'
+import { getBookCollection, deleteBookDocument } from '~/api/index'
 
 @Component({
   components: {
@@ -53,8 +55,28 @@ export default class Index extends Vue {
     ])
   }
 
-  remove() {
-    console.log('remove')
+  async remove() {
+    const user = auth.currentUser
+    if (user) {
+      await this.deleteBookDate()
+      await user
+        .delete()
+        .then(async () => {})
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  }
+  async deleteBookDate() {
+    await getBookCollection(this.$store.state.auth.uid).then(querySnapshot => {
+      querySnapshot.forEach(async doc => {
+        await deleteBookDocument(doc.id)
+          .then(() => {})
+          .catch(err => {
+            console.log(err)
+          })
+      })
+    })
   }
 }
 </script>
