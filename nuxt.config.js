@@ -17,7 +17,14 @@ export default {
   css: ['iview/dist/styles/iview.css', 'firebaseui/dist/firebaseui.css'],
   build: {},
   buildModules: ['@nuxt/typescript-build'],
-  modules: [],
+  modules: [
+    [
+      '@nuxtjs/google-analytics',
+      {
+        id: 'UA-154460877-1'
+      }
+    ]
+  ],
   plugins: ['@/plugins/iview'],
   router: {
     middleware: ['authenticated']
