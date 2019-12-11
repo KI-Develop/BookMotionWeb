@@ -3,7 +3,7 @@
     <Layout :style="{ minHeight: '100vh' }">
       <Header :style="{ width: '100%' }">
         <span class="header">
-          BookMotion
+          BookMotion(β)
         </span>
       </Header>
       <Content

@@ -12,6 +12,10 @@
       に同意したことになります。
     </Alert>
     <br />
+    <Alert show-icon style="width:350px; margin:0 auto">
+      現在β版での公開の為、動作が不安定になる可能性があります
+    </Alert>
+    <br />
     <br />
     <Card style="width:350px; margin: 0 auto">
       <p slot="title">
