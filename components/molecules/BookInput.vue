@@ -12,10 +12,10 @@
         <Input v-model="formValidate.title" placeholder="タイトルを入力" />
       </FormItem>
       <FormItem label="著者" prop="author">
-        <Input v-model="formValidate.mail" placeholder="著者を入力" />
+        <Input v-model="formValidate.author" placeholder="著者を入力" />
       </FormItem>
       <FormItem label="出版社" prop="publisher">
-        <Input placeholder="出版社を入力" />
+        <Input v-model="formValidate.publisher" placeholder="出版社を入力" />
       </FormItem>
       <FormItem label="分類" prop="bookStatus">
         <RadioGroup v-model="formValidate.bookStatus">

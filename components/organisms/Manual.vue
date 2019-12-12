@@ -54,7 +54,8 @@ export default class ManualInput extends Vue {
           description: bookData.desc,
           bookImage: '',
           publishedDate: '',
-          publisher: bookData.publisher
+          publisher: bookData.publisher,
+          totalPageCount: 0
         },
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       }
