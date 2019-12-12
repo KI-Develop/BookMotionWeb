@@ -60,13 +60,18 @@
               <Icon type="ios-more" />
               その他
             </template>
-            <a href="https://ki-develop.github.io/BookMotion_LP/index.html">
+            <a href="https://tsundoku.book-motion.com/notice.html">
               <MenuItem name="4-1">
                 お知らせ
               </MenuItem>
             </a>
-            <a href="https://ki-develop.github.io/BookMotion_LP/terms.html">
+            <a href="https://forms.gle/4ZAPNnhvWG9yLcNK9">
               <MenuItem name="4-2">
+                お問い合わせ
+              </MenuItem>
+            </a>
+            <a href="https://tsundoku.book-motion.com/terms.html">
+              <MenuItem name="4-3">
                 利用規約
               </MenuItem>
             </a>
