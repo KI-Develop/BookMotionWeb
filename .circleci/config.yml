@@ -1,8 +1,11 @@
-version: 2.1
+version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:4.8.2
+      - image: alpine
+
     steps:
       - checkout
-      - run: echo "hello world"
+      - run:
+          name: Install dependencies
+          command: echo "hello world!"
