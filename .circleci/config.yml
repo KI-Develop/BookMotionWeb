@@ -2,10 +2,8 @@ version: 2
 jobs:
   build:
     docker:
-      - image: alpine
-
+      - image: circleci/node:12
     steps:
       - checkout
-      - run:
-          name: Install dependencies
-          command: echo "hello world!"
+      - run: npm install
+      - run: npm test
