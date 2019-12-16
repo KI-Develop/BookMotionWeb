@@ -9,6 +9,9 @@ jobs:
           name: npm install
           command: npm i
       - run:
+          name: debug
+          command: ls
+      - run:
           name: build
           command: npm run generate
       - run:
