@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import Refine from '~/components/molecules/Refine.vue'
 
 describe('Rifine Component', () => {
@@ -12,9 +12,13 @@ describe('Rifine Component', () => {
     '読書開始日が早い順'
   ]
   test('propsを受け取れること', () => {
-    const wrapper = mount(Refine, {
-      propsData: { displayCriteria }
+    const wrapper = shallowMount(Refine, {
+      propsData: {
+        displayCriteria,
+        defaultCriteria: 'すべて表示'
+      }
     })
-    expect(wrapper.isVueInstance()).toBeTruthy()
+    expect(wrapper.props().displayCriteria).toBe(displayCriteria)
+    expect(wrapper.props().defaultCriteria).toBe('すべて表示')
   })
 })
