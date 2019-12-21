@@ -8,6 +8,7 @@
         collapsible
         :collapsed-width="78"
         breakpoint="md"
+        :class="hasFixMenu"
       >
         <Menu
           :active-name="activeName"
@@ -78,7 +79,7 @@
           </Submenu>
         </Menu>
       </Sider>
-      <Layout>
+      <Layout :class="hasFixContent">
         <Header :style="{ padding: 0 }" class="layout-header-bar">
           <Icon
             :class="rotateIcon"
@@ -128,6 +129,16 @@ export default {
     menuitemClasses: {
       get() {
         return ['menu-item', this.isCollapsed ? 'collapsed-menu' : '']
+      }
+    },
+    hasFixMenu: {
+      get() {
+        return !this.isCollapsed ? 'sider' : ''
+      }
+    },
+    hasFixContent: {
+      get() {
+        return !this.isCollapsed ? 'layout-fixed' : ''
       }
     }
   },
@@ -240,5 +251,14 @@ html {
   transition: font-size 0.2s ease, transform 0.2s ease;
   vertical-align: middle;
   font-size: 16px;
+}
+.sider {
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  overflow: auto;
+}
+.layout-fixed {
+  margin-left: 200px;
 }
 </style>
