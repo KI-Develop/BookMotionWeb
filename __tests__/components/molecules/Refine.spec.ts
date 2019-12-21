@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import Refine from '~/components/molecules/Refine.vue'
 
-describe('Rifine Component', () => {
+describe('Rifine', () => {
   const displayCriteria: Array<string> = [
     'すべて表示',
     '論文',

@@ -7,7 +7,7 @@ import { fromTimeStampToDate } from '~/api'
 const localVue = createLocalVue()
 localVue.use(iView, fromTimeStampToDate)
 
-describe('気になる本のBookList', () => {
+describe('Wishlist BookList', () => {
   const wishlistData: WishlistData[] = [
     {
       id: 'kjAPgpyBFWtQNCPXjlhV',
@@ -19,6 +19,7 @@ describe('気になる本のBookList', () => {
         'http://books.google.com/books/content?id=noA4DQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
       publishedDate: '2016-10-30',
       publisher: '小学館',
+      totalPageCount: 0,
       createdAt: 1574516743
     },
     {
@@ -31,6 +32,7 @@ describe('気になる本のBookList', () => {
         'http://books.google.com/books/content?id=noA4DQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
       publishedDate: '2016-10-30',
       publisher: '小学館',
+      totalPageCount: 0,
       createdAt: 1574516743
     },
     {
@@ -43,6 +45,7 @@ describe('気になる本のBookList', () => {
         'http://books.google.com/books/content?id=noA4DQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
       publishedDate: '2016-10-30',
       publisher: '小学館',
+      totalPageCount: 0,
       createdAt: 1574516743
     }
   ]
@@ -74,7 +77,7 @@ describe('気になる本のBookList', () => {
       wrapper.vm.$emit('addTsundoku', bookData)
     })
 
-    expect(wrapper.emitted().addTsundoku.length).toBe(3)
+    expect(wrapper.emitted('addTsundoku').length).toBe(3)
   })
 
   test('removeWishlistが叩ける', () => {
@@ -90,6 +93,6 @@ describe('気になる本のBookList', () => {
       wrapper.vm.$emit('removeWishlist', bookData)
     })
 
-    expect(wrapper.emitted().removeWishlist.length).toBe(3)
+    expect(wrapper.emitted('removeWishlist').length).toBe(3)
   })
 })

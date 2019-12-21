@@ -16,15 +16,16 @@ interface AddBookData {
 }
 
 export interface TsundokuData extends BookData {
-  createdAt?: number
-  readingStartDate?: number
+  createdAt: number
+  readingStartDate: number
   readingEndDate?: number
-  readingEndExpectedDate?: number
+  readingEndExpectedDate: number
   currentPageCount?: number
   totalPageCount?: number
 }
 export interface WishlistData extends BookData {
-  createdAt?: number
+  totalPageCount?: number
+  createdAt: number
 }
 
 export interface SearchData extends BookData {

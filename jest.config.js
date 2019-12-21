@@ -22,6 +22,8 @@ module.exports = {
     '<rootDir>/components/**/*.vue',
     '<rootDir>/pages/*.vue'
   ],
+  // detail view
+  verbose: true,
   globals: {
     'vue-jest': {
       babelConfig: false

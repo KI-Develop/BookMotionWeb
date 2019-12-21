@@ -1,14 +1,14 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import iView from 'iview'
 import BookList from '~/components/molecules/BookList.vue'
-import { TsundokuData } from '@/types/book'
+import { SearchData } from '@/types/book'
 import { fromTimeStampToDate } from '~/api'
 
 const localVue = createLocalVue()
 localVue.use(iView, fromTimeStampToDate)
 
-describe('Tsundoku BookList', () => {
-  const tsundokuData: TsundokuData[] = [
+describe('Search BookList', () => {
+  const searchData: SearchData[] = [
     {
       id: 'kjAPgpyBFWtQNCPXjlhV',
       title: '夜行',
@@ -19,11 +19,7 @@ describe('Tsundoku BookList', () => {
         'http://books.google.com/books/content?id=noA4DQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
       publishedDate: '2016-10-30',
       publisher: '小学館',
-      readingStartDate: 1575385200,
-      readingEndExpectedDate: 1576249200,
-      currentPageCount: 5,
-      totalPageCount: 256,
-      createdAt: 1574516743
+      totalPageCount: 0
     },
     {
       id: 'kjAPgpyBFWtQNCPXjlhV',
@@ -35,11 +31,7 @@ describe('Tsundoku BookList', () => {
         'http://books.google.com/books/content?id=noA4DQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
       publishedDate: '2016-10-30',
       publisher: '小学館',
-      readingStartDate: 1575385200,
-      readingEndExpectedDate: 1576249200,
-      currentPageCount: 5,
-      totalPageCount: 256,
-      createdAt: 1574516743
+      totalPageCount: 0
     },
     {
       id: 'kjAPgpyBFWtQNCPXjlhV',
@@ -51,11 +43,7 @@ describe('Tsundoku BookList', () => {
         'http://books.google.com/books/content?id=noA4DQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
       publishedDate: '2016-10-30',
       publisher: '小学館',
-      readingStartDate: 1575385200,
-      readingEndExpectedDate: 1576249200,
-      currentPageCount: 5,
-      totalPageCount: 256,
-      createdAt: 1574516743
+      totalPageCount: 0
     }
   ]
 
@@ -63,28 +51,45 @@ describe('Tsundoku BookList', () => {
     const wrapper = shallowMount(BookList, {
       localVue,
       propsData: {
-        items: tsundokuData,
-        flag: 'tsundoku',
+        items: searchData,
+        flag: 'search',
         loadingFlag: false
       }
     })
-    expect(wrapper.props().items).toBe(tsundokuData)
-    expect(wrapper.props().flag).toBe('tsundoku')
+    expect(wrapper.props().items).toBe(searchData)
+    expect(wrapper.props().flag).toBe('search')
     expect(wrapper.props().loadingFlag).toBe(false)
   })
 
-  test('editTsundokuが叩ける', () => {
+  test('addTsundokuが叩ける', () => {
     const wrapper = shallowMount(BookList, {
       localVue,
       propsData: {
-        items: tsundokuData,
-        flag: 'tsundoku',
+        items: searchData,
+        flag: 'search',
         loadingFlag: false
       }
     })
-    tsundokuData.map(bookData => {
-      wrapper.vm.$emit('editTsundoku', bookData)
+    searchData.map(bookData => {
+      wrapper.vm.$emit('addTsundoku', bookData)
     })
-    expect(wrapper.emitted('editTsundoku').length).toBe(3)
+
+    expect(wrapper.emitted('addTsundoku').length).toBe(3)
+  })
+
+  test('addWishlistが叩ける', () => {
+    const wrapper = shallowMount(BookList, {
+      localVue,
+      propsData: {
+        items: searchData,
+        flag: 'search',
+        loadingFlag: false
+      }
+    })
+    searchData.map(bookData => {
+      wrapper.vm.$emit('addWishlist', bookData)
+    })
+
+    expect(wrapper.emitted('addWishlist').length).toBe(3)
   })
 })
