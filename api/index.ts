@@ -2,7 +2,8 @@ import axios from 'axios'
 import {
   AddTsundokuData,
   AddWishlistData,
-  updateTsundokuData
+  UpdateTsundokuData,
+  UpdateWishlistData
 } from '~/types/book'
 import { db } from '~/plugins/firebase'
 
@@ -79,7 +80,7 @@ export async function getBookCollection(userId: string) {
   return snapShot
 }
 
-export async function updateTsundoku(tsundokuData: updateTsundokuData) {
+export async function updateTsundoku(tsundokuData: UpdateTsundokuData) {
   const snapShot = await db
     .collection('books')
     .doc(tsundokuData.documentId)
@@ -88,6 +89,20 @@ export async function updateTsundoku(tsundokuData: updateTsundokuData) {
       readingStartDate: tsundokuData.readingStartDate,
       readingEndExpectedDate: tsundokuData.readingEndExpectedDate,
       'items.totalPageCount': tsundokuData.totalPageCount
+    })
+  return snapShot
+}
+
+export async function updateWishlist(wishlistData: UpdateWishlistData) {
+  const snapShot = await db
+    .collection('books')
+    .doc(wishlistData.documentId)
+    .update({
+      bookStatus: wishlistData.bookStatus,
+      currentPageCount: wishlistData.currentPageCount,
+      readingStartDate: wishlistData.readingStartDate,
+      readingEndExpectedDate: wishlistData.readingEndExpectedDate,
+      'items.totalPageCount': wishlistData.totalPageCount
     })
   return snapShot
 }

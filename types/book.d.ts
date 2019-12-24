@@ -43,10 +43,16 @@ export interface AddTsundokuData extends AddBookData {
   items: SearchData
 }
 
-export type updateTsundokuData = {
+interface UpdateData {
   documentId: string
   currentPageCount: number
   totalPageCount: number
   readingStartDate: number
   readingEndExpectedDate: number
+}
+
+export interface UpdateTsundokuData extends UpdateData {}
+
+export interface UpdateWishlistData extends UpdateData {
+  bookStatus: string
 }

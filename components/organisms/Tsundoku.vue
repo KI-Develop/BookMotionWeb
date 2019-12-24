@@ -37,7 +37,7 @@ import BookList from '@/components/molecules/BookList.vue'
 import BookModal from '~/components/molecules/BookModal.vue'
 import RemoveModal from '~/components/molecules/RemoveModal.vue'
 import Refine from '@/components/molecules/Refine.vue'
-import { TsundokuData, updateTsundokuData } from '@/types/book'
+import { TsundokuData, UpdateTsundokuData } from '@/types/book'
 import {
   getMoreTsundokuData,
   deleteBookDocument,
@@ -91,14 +91,14 @@ export default class Index extends Vue {
   }
 
   editOk(tsundokuData: any) {
-    const updateItem: updateTsundokuData = {
+    const updateTsundokuData: UpdateTsundokuData = {
       documentId: tsundokuData.item.id,
       currentPageCount: tsundokuData.currentPageCount,
       totalPageCount: tsundokuData.item.totalPageCount,
       readingStartDate: tsundokuData.readingStartDate,
       readingEndExpectedDate: tsundokuData.readingEndExpectedDate
     }
-    updateTsundoku(updateItem)
+    updateTsundoku(updateTsundokuData)
       .then(() => {
         this.$emit('updateTsundoku')
         this.$Notice.success({ title: '積み本を編集しました。' })
