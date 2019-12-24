@@ -42,3 +42,11 @@ export interface AddTsundokuData extends AddBookData {
   currentPageCount: number
   items: SearchData
 }
+
+export type updateTsundokuData = {
+  documentId: string
+  currentPageCount: number
+  totalPageCount: number
+  readingStartDate: number
+  readingEndExpectedDate: number
+}

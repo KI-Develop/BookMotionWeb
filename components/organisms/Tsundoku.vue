@@ -37,9 +37,12 @@ import BookList from '@/components/molecules/BookList.vue'
 import BookModal from '~/components/molecules/BookModal.vue'
 import RemoveModal from '~/components/molecules/RemoveModal.vue'
 import Refine from '@/components/molecules/Refine.vue'
-import { TsundokuData } from '@/types/book'
-import { db } from '~/plugins/firebase'
-import { getMoreTsundokuData } from '~/api/index'
+import { TsundokuData, updateTsundokuData } from '@/types/book'
+import {
+  getMoreTsundokuData,
+  deleteBookDocument,
+  updateTsundoku
+} from '~/api/index'
 
 @Component({
   components: { BookList, Refine, BookModal, RemoveModal }
@@ -76,9 +79,7 @@ export default class Index extends Vue {
     this.removeDialog = true
   }
   remove(removeItem: any) {
-    db.collection('books')
-      .doc(removeItem.id)
-      .delete()
+    deleteBookDocument(removeItem.id)
       .then(() => {
         this.removeItem = {}
         this.$emit('updateTsundoku')
@@ -90,14 +91,14 @@ export default class Index extends Vue {
   }
 
   editOk(tsundokuData: any) {
-    db.collection('books')
-      .doc(tsundokuData.item.id)
-      .update({
-        currentPageCount: tsundokuData.currentPageCount,
-        readingStartDate: tsundokuData.readingStartDate,
-        readingEndExpectedDate: tsundokuData.readingEndExpectedDate,
-        'items.totalPageCount': tsundokuData.item.totalPageCount
-      })
+    const updateItem: updateTsundokuData = {
+      documentId: tsundokuData.item.id,
+      currentPageCount: tsundokuData.currentPageCount,
+      totalPageCount: tsundokuData.item.totalPageCount,
+      readingStartDate: tsundokuData.readingStartDate,
+      readingEndExpectedDate: tsundokuData.readingEndExpectedDate
+    }
+    updateTsundoku(updateItem)
       .then(() => {
         this.$emit('updateTsundoku')
         this.$Notice.success({ title: '積み本を編集しました。' })
