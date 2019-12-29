@@ -35,9 +35,12 @@ import BookList from '@/components/molecules/BookList.vue'
 import BookModal from '~/components/molecules/BookModal.vue'
 import RemoveModal from '~/components/molecules/RemoveModal.vue'
 import Refine from '@/components/molecules/Refine.vue'
-import { WishlistData, SearchData } from '@/types/book'
-import { db } from '~/plugins/firebase'
-import { getMoreWishlistData } from '~/api/index'
+import { WishlistData, SearchData, UpdateWishlistData } from '@/types/book'
+import {
+  getMoreWishlistData,
+  deleteBookDocument,
+  updateWishlist
+} from '~/api/index'
 
 @Component({
   components: { BookList, Refine, BookModal, RemoveModal }
@@ -71,9 +74,7 @@ export default class WishList extends Vue {
     this.removeDialog = true
   }
   remove(removeItem: any) {
-    db.collection('books')
-      .doc(removeItem.id)
-      .delete()
+    deleteBookDocument(removeItem.id)
       .then(() => {
         this.removeItem = {}
         this.$emit('updateWishlist')
@@ -84,16 +85,18 @@ export default class WishList extends Vue {
       })
   }
 
-  ok(tsundokuData: any) {
-    db.collection('books')
-      .doc(tsundokuData.item.id)
-      .update({
-        bookStatus: 'tsundoku',
-        currentPageCount: tsundokuData.currentPageCount,
-        readingStartDate: tsundokuData.readingStartDate,
-        readingEndExpectedDate: tsundokuData.readingEndExpectedDate,
-        'items.totalPageCount': tsundokuData.item.totalPageCount
-      })
+  // 積み本に追加する関数
+  // TODO: 命名変える
+  ok(wishlistData: any) {
+    const wishlistTsundokuData: UpdateWishlistData = {
+      documentId: wishlistData.item.id,
+      currentPageCount: wishlistData.currentPageCount,
+      totalPageCount: wishlistData.item.totalPageCount,
+      readingStartDate: wishlistData.readingStartDate,
+      readingEndExpectedDate: wishlistData.readingEndExpectedDate,
+      bookStatus: 'tsundoku'
+    }
+    updateWishlist(wishlistTsundokuData)
       .then(() => {
         this.$emit('updateWishlist')
         this.$Notice.success({ title: '積み本に追加しました。' })

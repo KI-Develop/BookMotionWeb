@@ -1,5 +1,10 @@
 import axios from 'axios'
-import { AddTsundokuData, AddWishlistData } from '~/types/book'
+import {
+  AddTsundokuData,
+  AddWishlistData,
+  UpdateTsundokuData,
+  UpdateWishlistData
+} from '~/types/book'
 import { db } from '~/plugins/firebase'
 
 export async function googleBooksApi(keyword: string): Promise<any> {
@@ -72,6 +77,33 @@ export async function getBookCollection(userId: string) {
     .collection('books')
     .where('userId', '==', userId)
     .get()
+  return snapShot
+}
+
+export async function updateTsundoku(tsundokuData: UpdateTsundokuData) {
+  const snapShot = await db
+    .collection('books')
+    .doc(tsundokuData.documentId)
+    .update({
+      currentPageCount: tsundokuData.currentPageCount,
+      readingStartDate: tsundokuData.readingStartDate,
+      readingEndExpectedDate: tsundokuData.readingEndExpectedDate,
+      'items.totalPageCount': tsundokuData.totalPageCount
+    })
+  return snapShot
+}
+
+export async function updateWishlist(wishlistData: UpdateWishlistData) {
+  const snapShot = await db
+    .collection('books')
+    .doc(wishlistData.documentId)
+    .update({
+      bookStatus: wishlistData.bookStatus,
+      currentPageCount: wishlistData.currentPageCount,
+      readingStartDate: wishlistData.readingStartDate,
+      readingEndExpectedDate: wishlistData.readingEndExpectedDate,
+      'items.totalPageCount': wishlistData.totalPageCount
+    })
   return snapShot
 }
 
