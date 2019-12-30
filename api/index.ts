@@ -48,7 +48,7 @@ export async function getWishlistData(userId: string) {
   return snapShot
 }
 
-export async function getFinishData(userId: string) {
+export async function getFinishBookData(userId: string) {
   const snapShot = await db
     .collection('books')
     .orderBy('createdAt', 'desc')
@@ -109,6 +109,14 @@ export async function updateTsundokuFinish(docId: string) {
     .collection('books')
     .doc(docId)
     .update({ bookStatus: 'finish' })
+  return snapShot
+}
+
+export async function updateFinishBookArchive(docId: string) {
+  const snapShot = await db
+    .collection('books')
+    .doc(docId)
+    .update({ bookStatus: 'archive' })
   return snapShot
 }
 

@@ -29,7 +29,7 @@
               <span>気になる本</span>
             </MenuItem>
             <MenuItem name="1-3" @click.native="pageLink('/home/finish')">
-              <span>読了</span>
+              <span>読み終えた本</span>
             </MenuItem>
           </Submenu>
           <Submenu name="2">

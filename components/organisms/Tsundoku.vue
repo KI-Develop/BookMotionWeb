@@ -108,7 +108,7 @@ export default class Index extends Vue {
         ) {
           await updateTsundokuFinish(updateTsundokuData.documentId)
             .then(() => {
-              // TODO: モーダルを出す
+              this.$Notice.success({ title: '読了お疲れ様です。👏' })
             })
             .catch(err => {
               console.log(err)
