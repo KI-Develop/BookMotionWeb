@@ -48,6 +48,17 @@ export async function getWishlistData(userId: string) {
   return snapShot
 }
 
+export async function getFinishData(userId: string) {
+  const snapShot = await db
+    .collection('books')
+    .orderBy('createdAt', 'desc')
+    .where('userId', '==', userId)
+    .where('bookStatus', '==', 'finish')
+    .limit(10)
+    .get()
+  return snapShot
+}
+
 export async function getMoreTsundokuData(userId: string, lastDate: any) {
   const snapShot = await db
     .collection('books')
@@ -90,6 +101,14 @@ export async function updateTsundoku(tsundokuData: UpdateTsundokuData) {
       readingEndExpectedDate: tsundokuData.readingEndExpectedDate,
       'items.totalPageCount': tsundokuData.totalPageCount
     })
+  return snapShot
+}
+
+export async function updateTsundokuFinish(docId: string) {
+  const snapShot = await db
+    .collection('books')
+    .doc(docId)
+    .update({ bookStatus: 'finish' })
   return snapShot
 }
 
