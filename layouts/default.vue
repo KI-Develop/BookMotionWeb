@@ -28,9 +28,6 @@
             <MenuItem name="1-2" @click.native="pageLink('/home/wishlist')">
               <span>気になる本</span>
             </MenuItem>
-            <MenuItem name="1-3" @click.native="pageLink('/home/finish')">
-              <span>読み終えた本</span>
-            </MenuItem>
           </Submenu>
           <Submenu name="2">
             <template slot="title">
@@ -40,6 +37,9 @@
             <MenuItem name="2-1" @click.native="pageLink('/register/searchdb')">
               <span>データベース検索</span>
             </MenuItem>
+            <!-- <MenuItem name="2-2">
+                <span>論文検索</span>
+              </MenuItem> -->
             <MenuItem name="2-2" @click.native="pageLink('/register/manual')">
               <span>手動入力</span>
             </MenuItem>

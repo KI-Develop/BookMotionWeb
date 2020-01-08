@@ -93,13 +93,6 @@
               </li>
             </template>
           </template>
-          <template v-if="flag === 'finish'">
-            <template slot="action">
-              <li @click="archive(item)">
-                <Icon type="md-archive" /> アーカイブする
-              </li>
-            </template>
-          </template>
           <template slot="extra">
             <img :src="item.bookImage" style="width: 170px" />
           </template>
@@ -176,11 +169,6 @@ export default class BookList extends Vue {
   editTsundoku(item: any): void {
     if (this.flag === 'tsundoku') {
       this.$emit('tsunEditTsundoku', item)
-    }
-  }
-  archive(item: any) {
-    if (this.flag === 'finish') {
-      this.$emit('archive', item)
     }
   }
   dropdownItemClick(name: any) {
