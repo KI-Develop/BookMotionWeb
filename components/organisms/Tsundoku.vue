@@ -41,7 +41,8 @@ import { TsundokuData, UpdateTsundokuData } from '@/types/book'
 import {
   getMoreTsundokuData,
   deleteBookDocument,
-  updateTsundoku
+  updateTsundoku,
+  updateTsundokuFinish
 } from '~/api/index'
 
 @Component({
@@ -90,7 +91,7 @@ export default class Index extends Vue {
       })
   }
 
-  editOk(tsundokuData: any) {
+  async editOk(tsundokuData: any) {
     const updateTsundokuData: UpdateTsundokuData = {
       documentId: tsundokuData.item.id,
       currentPageCount: tsundokuData.currentPageCount,
@@ -98,10 +99,24 @@ export default class Index extends Vue {
       readingStartDate: tsundokuData.readingStartDate,
       readingEndExpectedDate: tsundokuData.readingEndExpectedDate
     }
-    updateTsundoku(updateTsundokuData)
-      .then(() => {
+    await updateTsundoku(updateTsundokuData)
+      .then(async () => {
+        if (
+          updateTsundokuData.currentPageCount ===
+            updateTsundokuData.totalPageCount &&
+          updateTsundokuData.totalPageCount !== 0
+        ) {
+          await updateTsundokuFinish(updateTsundokuData.documentId)
+            .then(() => {
+              this.$Notice.success({ title: '読了お疲れ様です。👏' })
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        } else {
+          this.$Notice.success({ title: '積み本を編集しました。' })
+        }
         this.$emit('updateTsundoku')
-        this.$Notice.success({ title: '積み本を編集しました。' })
       })
       .catch(err => {
         console.log(err)
