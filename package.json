@@ -14,7 +14,7 @@
     "firebaseui": "^4.2.0",
     "firebaseui-ja": "^1.0.0",
     "iview": "^3.1.5",
-    "nuxt": "2.9.2",
+    "nuxt": "2.15.8",
     "nuxt-property-decorator": "^2.4.0",
     "vue-property-decorator": "^8.3.0",
     "vuex-class": "^0.3.2"
